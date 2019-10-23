@@ -56,11 +56,11 @@ def handle_image(event):
     
     # 画像の送信
     image_message = ImageSendMessage(
-        original_content_url=f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}",
-        preview_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{preview_image_path}"
+        original_content_url=f"https://drive.google.com/drive/my-drive/{main_image_path}",
+        preview_image_url=f"https://drive.google.com/drive/my-drive/{preview_image_path}"
     )
 
-    app.logger.info(f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}")
+    app.logger.info(f"https://drive.google.com/drive/my-drive/{main_image_path}")
     line_bot_api.reply_message(event.reply_token, image_message)
 
     # 画像を削除する
