@@ -14,11 +14,11 @@ YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
-"""
-SRC_IMAGE_PATH = GET https://api.line.me/v2/bot/message/{messageId}/content
-MAIN_IMAGE_PATH = GET https://api.line.me/v2/bot/message/{messageId}/content
-PREVIEW_IMAGE_PATH = GET https://api.line.me/v2/bot/message/{messageId}/content
-"""
+
+SRC_IMAGE_PATH = "static/images/{}.jpg"
+MAIN_IMAGE_PATH = "static/images/{}_main.jpg"
+PREVIEW_IMAGE_PATH = "static/images/{}_preview.jpg"
+
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
@@ -43,7 +43,7 @@ def handle_message(event):
         TextSendMessage(text=event.message.text))
 
 @handler.add(MessageEvent, message=ImageMessage)
-"""def handle_image(event):
+def handle_image(event):
     message_id = event.message.id
 
     src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
@@ -64,7 +64,7 @@ def handle_message(event):
 
     # 画像を削除する
     src_image_path.unlink()
-"""
+
 def save_image(message_id: str, save_path: str) -> None:
     # message_idから画像のバイナリデータを取得
     message_content = line_bot_api.get_message_content(message_id)
