@@ -68,7 +68,7 @@ def handle_image(event):
 def save_image(message_id: str, save_path: str) -> None:
     # message_idから画像のバイナリデータを取得
     message_content = line_bot_api.get_message_content(message_id)
-    with open(save_path "wb") as f:
+    with open(save_path, "wb") as f:
         # バイナリを1024バイトずつ書き込む
         for chunk in message_content.iter_content():
             f.write(chunk)
