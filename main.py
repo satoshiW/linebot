@@ -15,9 +15,9 @@ YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 
-SRC_IMAGE_PATH = "https://api.line.me/v2/bot/message/{messageId}/content"
-MAIN_IMAGE_PATH = "https://api.line.me/v2/bot/message/{messageId}/content"
-PREVIEW_IMAGE_PATH = "https://api.line.me/v2/bot/message/{messageId}/content"
+SRC_IMAGE_PATH = GET https://api.line.me/v2/bot/message/{messageId}/content
+MAIN_IMAGE_PATH = GET https://api.line.me/v2/bot/message/{messageId}/content
+PREVIEW_IMAGE_PATH = GET https://api.line.me/v2/bot/message/{messageId}/content
 
 @app.route("/callback", methods=['POST'])
 def callback():
