@@ -14,11 +14,11 @@ YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
-
+"""
 SRC_IMAGE_PATH = "https://api.line.me/v2/bot/message/{}.jpg/content"
 MAIN_IMAGE_PATH = "https://api.line.me/v2/bot/message/{}_main.jpg/content"
 PREVIEW_IMAGE_PATH = "https://api.line.me/v2/bot/message/{}_preview.jpg/content"
-
+"""
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
@@ -41,7 +41,7 @@ def handle_message(event):
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=event.message.text))
-
+"""
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image(event):
     message_id = event.message.id
@@ -69,6 +69,18 @@ def save_image(message_id: str, save_path: str) -> None:
     # message_idから画像のバイナリデータを取得
     message_content = line_bot_api.get_message_content(message_id)
     with open(save_path, "wb") as f:
+        # バイナリを1024バイトずつ書き込む
+        for chunk in message_content.iter_content():
+            f.write(chunk)
+"""
+@handler.add(MessageEvent, message=ImageMessage)
+def handle_image(event):
+    message_id = event.message.id
+
+    # message_idから画像のバイナリデータを取得
+    message_content = line_bot_api.get_message_content(message_id)
+
+    with open(Path(f"static/images/{message_id}.jpg").absolute(), "wb") as f:
         # バイナリを1024バイトずつ書き込む
         for chunk in message_content.iter_content():
             f.write(chunk)
