@@ -14,11 +14,11 @@ YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
-
+"""
 SRC_IMAGE_PATH = "https://api.line.me/v2/bot/message/{}.jpg/content"
 MAIN_IMAGE_PATH = "https://api.line.me/v2/bot/message/{}_main.jpg/content"
 PREVIEW_IMAGE_PATH = "https://api.line.me/v2/bot/message/{}_preview.jpg/content"
-
+"""
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
@@ -46,6 +46,11 @@ def handle_message(event):
 def handle_image(event):
     message_id = event.message.id
 
+    message_content = line_bot_api.get_message_content(message_id)
+    with open(Path(f"https://hidden-anchorage-52228.herokuapp.com/{message_id}.jpg").absolute(), 'wb') as fd:
+        for chunk in message_content.iter_content():
+            fd.write(chunk)
+"""
     src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
     main_image_path = MAIN_IMAGE_PATH.format(message_id)
     preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
@@ -72,6 +77,7 @@ def save_image(message_id: str, save_path: str) -> None:
         # バイナリを1024バイトずつ書き込む
         for chunk in message_content.iter_content():
             f.write(chunk)
+"""
 
 if __name__ == "__main__":
 #    app.run()
