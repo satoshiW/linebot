@@ -4,7 +4,6 @@ from linebot.exceptions import (InvalidSignatureError)
 from linebot.models import (ImageMessage, ImageSendMessage, MessageEvent, TextMessage, TextSendMessage)
 from pathlib import Path
 import os
-import boto3
 
 app = Flask(__name__)
 app.debug = False
