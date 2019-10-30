@@ -3,7 +3,7 @@ from linebot import (LineBotApi, WebhookHandler)
 from linebot.exceptions import (InvalidSignatureError)
 from linebot.models import (ImageMessage, ImageSendMessage, MessageEvent, TextMessage, TextSendMessage)
 from pathlib import Path
-import os
+import os 
 
 app = Flask(__name__)
 app.debug = False
@@ -15,9 +15,9 @@ YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 
-SRC_IMAGE_PATH = "static/images/{}.jpg"
-MAIN_IMAGE_PATH = "static/images/{}_main.jpg"
-PREVIEW_IMAGE_PATH = "static/images/{}_preview.jpg"
+SRC_IMAGE_PATH = "https://api.line.me/v2/bot/message/,{}.jpg,/content"
+MAIN_IMAGE_PATH = "https://api.line.me/v2/bot/message/,{}_main.jpg,/content"
+PREVIEW_IMAGE_PATH = "https://api.line.me/v2/bot/message/,{}_preview.jpg,/content"
 
 @app.route("/callback", methods=['POST'])
 def callback():
