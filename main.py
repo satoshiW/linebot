@@ -65,7 +65,7 @@ def handle_image(event):
     # 画像を削除する
 #    src_image_path.unlink()
     
-save_path = Path(f"static/images/{message_id}.jpg").absolute()
+#save_path = Path(f"static/images/{message_id}.jpg").absolute()
 
 def save_image(message_id: str, save_path: str) -> None:
     # message_idから画像のバイナリデータを取得
