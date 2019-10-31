@@ -42,6 +42,17 @@ def handle_message(event):
         event.reply_token,
         TextSendMessage(text=event.message.text))
 
+save_path = Path(f"static/images/{message_id}.jpg").absolute()
+
+def save_image(message_id: str, save_path: str) -> None:
+    # message_idから画像のバイナリデータを取得
+    message_content = line_bot_api.get_message_content(message_id)
+    with open(save_path, "wb") as f:
+        # バイナリを1024バイトずつ書き込む
+        for chunk in message_content.iter_content():
+            f.write(chunk)
+
+
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image(event):
     message_id = event.message.id
@@ -65,16 +76,6 @@ def handle_image(event):
     # 画像を削除する
     src_image_path.unlink()
     
-    save_path = Path(f"static/images/{message_id}.jpg").absolute()
-
-def save_image(message_id: str, save_path: str) -> None:
-    # message_idから画像のバイナリデータを取得
-    message_content = line_bot_api.get_message_content(message_id)
-    with open(save_path, "wb") as f:
-        # バイナリを1024バイトずつ書き込む
-        for chunk in message_content.iter_content():
-            f.write(chunk)
-
 if __name__ == "__main__":
 #    app.run()
     port = int(os.getenv("PORT", 5000))
