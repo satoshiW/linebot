@@ -4,7 +4,7 @@ from linebot.exceptions import (InvalidSignatureError)
 from linebot.models import (ImageMessage, ImageSendMessage, MessageEvent, TextMessage, TextSendMessage)
 
 from pathlib import Path
-from date_the_image import date_the_image
+import evaluate
 import os 
 
 app = Flask(__name__)
@@ -55,8 +55,8 @@ def handle_image(event):
     # 画像を保存
     save_image(message_id, src_image_path)
     
-    date_the_image(src=src_image_path, desc=Path(main_image_path).absolute())
-    date_the_image(src=src_image_path, desc=Path(preview_image_path).absolute())
+    evaluate(src=src_image_path, desc=Path(main_image_path).absolute())
+    evaluate(src=src_image_path, desc=Path(preview_image_path).absolute())
 
     # 画像の送信
     image_message = ImageSendMessage(
