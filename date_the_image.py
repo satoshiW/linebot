@@ -18,4 +18,4 @@ def date_the_image(src: str, desc: str) -> None:
     
     im.save(desc)
     
-    print date_the_image(src)
+print date_the_image(src)
