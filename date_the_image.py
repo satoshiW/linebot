@@ -17,5 +17,3 @@ def date_the_image(src: str, desc: str) -> None:
     return exif_table.get("DateTimeOriginal")
     
     im.save(desc)
-    
-print date_the_image()
