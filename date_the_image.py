@@ -1,5 +1,4 @@
 from PIL import Image
-from PIL.ExifTags import TAGS
 
 def date_the_image(src: str, desc: str) -> None:
     im = Image.open(src)

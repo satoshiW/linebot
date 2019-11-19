@@ -5,6 +5,7 @@ from linebot.models import (ImageMessage, ImageSendMessage, MessageEvent, TextMe
 
 from pathlib import Path
 from date_the_image import date_the_image
+from PIL.ExifTags import TAGS
 import os 
 
 app = Flask(__name__)
