@@ -79,6 +79,18 @@ def save_image(message_id: str, save_path: str) -> None:
         # バイナリを1024バイトずつ書き込む
         for chunk in message_content.iter_content():
             f.write(chunk)
+            
+    try:
+    	exif = im._getexif()
+    except AttributeError:
+    	return {}
+    	
+    exif_table = {}
+    for tag_id, value in exif.items():
+    	tag = TAGS.get(tag_id, tag_id)
+    	exif_table[tag] = value
+
+    return exif_table.get("DateTimeOriginal")
 
 if __name__ == "__main__":
 #    app.run()
