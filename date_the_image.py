@@ -14,6 +14,6 @@ def date_the_image(src: str, desc: str) -> None:
     	tag = TAGS.get(tag_id, tag_id)
     	exif_table[tag] = value
 
-    return exif_table.get("DateTimeOriginal")
+    return exif_table.get(DateTimeOriginal)
     
     im.save(desc)
