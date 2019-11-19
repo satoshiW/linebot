@@ -3,6 +3,7 @@ from PIL.ExifTags import TAGS
 
 def date_the_image(src: str, desc: str) -> None:
     im = Image.open(src)
+    im.save(desc)
     
     try:
     	exif = im._getexif()
@@ -14,6 +15,4 @@ def date_the_image(src: str, desc: str) -> None:
     	tag = TAGS.get(tag_id, tag_id)
     	exif_table[tag] = value
 
-    return exif_table.get(DateTimeOriginal)
-    
-    im.save(desc)
+    return exif_table.get("DateTimeOriginal")
