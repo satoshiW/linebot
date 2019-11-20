@@ -82,7 +82,7 @@ def save_image(message_id: str, save_path: str) -> None:
         for chunk in message_content.iter_content():
             f.write(chunk)
             
-    im = image.open(chunk)
+    im = Image.open(chunk)
     
     try:
     	exif = im._getexif()
