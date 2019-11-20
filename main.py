@@ -81,7 +81,7 @@ def save_image(message_id: str, save_path: str) -> None:
         # バイナリを1024バイトずつ書き込む
         for chunk in message_content.iter_content():
             f.write(chunk)
-            
+"""
     im = Image.open(chunk)
     
     try:
@@ -95,7 +95,7 @@ def save_image(message_id: str, save_path: str) -> None:
     	exif_table[tag] = value
 
     return exif_table.get("DateTimeOriginal")
-
+"""
 if __name__ == "__main__":
 #    app.run()
     port = int(os.getenv("PORT", 5000))
