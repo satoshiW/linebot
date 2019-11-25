@@ -74,8 +74,8 @@ def handle_image(event):
     )
 
     app.logger.info(f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}")
-
-    app.logger.info(f"s3_image_url")"""
+"""
+    app.logger.info(f"s3_image_url")
     line_bot_api.reply_message(event.reply_token, image_message)
 
     # 画像を削除する
