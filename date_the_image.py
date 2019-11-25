@@ -24,5 +24,6 @@ def date_the_image(src: str, desc: str) -> None:
     	exif_table[tag] = value
 
     return exif_table.get("DateTimeOriginal")
-    """
+    
     im.save(desc)
+    """
