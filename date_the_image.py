@@ -2,6 +2,16 @@ from PIL import Image
 
 def date_the_image(src: str, desc: str) -> None:
     im = Image.open(src)
+    
+    s3_resource = boto3.resource("s3")
+    s3_resource.Bucket(aws_s3_bucket).upload_file(message_id, message_id)
+    
+    s3_client = boto3.client("s3")
+    s3_image_url = s3_client.generater_presigned_url(
+           ClientMethod = "get_object",
+           Params = {"Bucket": aws_s3_bucket, "Key": message_id},
+           ExpiresIn = 10,
+           HttpMethod = "GET"
     """
     try:
     	exif = im._getexif()

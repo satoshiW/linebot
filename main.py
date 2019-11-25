@@ -5,9 +5,9 @@ from linebot.models import (ImageMessage, ImageSendMessage, MessageEvent, TextMe
 
 from pathlib import Path
 from date_the_image import date_the_image
-from PIL import Image
 from PIL.ExifTags import TAGS
 import os 
+import boto3
 
 app = Flask(__name__)
 app.debug = False
@@ -18,6 +18,7 @@ YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
+aws_s3_bucket = os.environ["AWS_STORAGE_BUCKET_NAME"]
 
 SRC_IMAGE_PATH = "static/images/{}.jpg"
 MAIN_IMAGE_PATH = "static/images/{}_main.jpg"
@@ -54,18 +55,24 @@ def handle_image(event):
     main_image_path = MAIN_IMAGE_PATH.format(message_id)
     preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
 
-    # 画像を保存
+    # 画像をHerokuへ保存
     save_image(message_id, src_image_path)
     
     date_the_image(src=src_image_path, desc=Path(main_image_path).absolute())
     date_the_image(src=src_image_path, desc=Path(preview_image_path).absolute())
 
+    image_message = ImageSendMessage(
+        original_content_url=f"s3_image_url",
+        preview_image_url=f"s3_image_url"
+    )
+
+"""
     # 画像の送信
     image_message = ImageSendMessage(
         original_content_url=f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}",
         preview_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{preview_image_path}"
     )
-
+"""
     app.logger.info(f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}")
     line_bot_api.reply_message(event.reply_token, image_message)
 
