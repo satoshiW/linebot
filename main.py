@@ -4,7 +4,6 @@ from linebot.exceptions import (InvalidSignatureError)
 from linebot.models import (ImageMessage, ImageSendMessage, MessageEvent, TextMessage, TextSendMessage)
 
 from pathlib import Path
-from date_the_image import date_the_image
 from PIL.ExifTags import TAGS
 from PIL import Image
 import os 
