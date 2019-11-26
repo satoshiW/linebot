@@ -1,4 +1,5 @@
 from PIL import Image
+import boto3
 
 def date_the_image(src: str, desc: str) -> None:
     im = Image.open(src)

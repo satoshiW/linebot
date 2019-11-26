@@ -7,7 +7,6 @@ from pathlib import Path
 from date_the_image import date_the_image
 from PIL.ExifTags import TAGS
 import os 
-import boto3
 
 app = Flask(__name__)
 app.debug = False
