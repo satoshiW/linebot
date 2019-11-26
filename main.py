@@ -48,22 +48,6 @@ def handle_message(event):
         TextSendMessage(text=event.message.text))
 
 @handler.add(MessageEvent, message=ImageMessage)
-def date_the_image(src: str, desc: str) -> None:
-    im = Image.open(src)
-    
-    s3_resource = boto3.resource("s3")
-    s3_resource.Bucket(aws_s3_bucket).upload_file(message_id, message_id)
-    
-    s3_client = boto3.client("s3")
-    s3_image_url = s3_client.generater_presigned_url(
-           ClientMethod = "get_object",
-           Params = {"Bucket": aws_s3_bucket, "Key": message_id},
-           ExpiresIn = 10,
-           HttpMethod = "GET"
-    )
-
-    im.save(desc)
-
 def handle_image(event):
     message_id = event.message.id
 
@@ -106,6 +90,24 @@ def save_image(message_id: str, save_path: str) -> None:
         # バイナリを1024バイトずつ書き込む
         for chunk in message_content.iter_content():
             f.write(chunk)
+
+def date_the_image(src: str, desc: str) -> None:
+    im = Image.open(src)
+    
+    s3_resource = boto3.resource("s3")
+    s3_resource.Bucket(aws_s3_bucket).upload_file(message_id, message_id)
+    
+    s3_client = boto3.client("s3")
+    s3_image_url = s3_client.generater_presigned_url(
+           ClientMethod = "get_object",
+           Params = {"Bucket": aws_s3_bucket, "Key": message_id},
+           ExpiresIn = 10,
+           HttpMethod = "GET"
+    )
+
+    im.save(desc)
+
+
 """
     im = Image.open(chunk)
     
