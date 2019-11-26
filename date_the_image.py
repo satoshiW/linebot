@@ -12,6 +12,7 @@ def date_the_image(src: str, desc: str) -> None:
            Params = {"Bucket": aws_s3_bucket, "Key": message_id},
            ExpiresIn = 10,
            HttpMethod = "GET"
+    )
     """
     try:
     	exif = im._getexif()
