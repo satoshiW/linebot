@@ -6,7 +6,9 @@ from linebot.models import (ImageMessage, ImageSendMessage, MessageEvent, TextMe
 from pathlib import Path
 from date_the_image import date_the_image
 from PIL.ExifTags import TAGS
+from PIL import Image
 import os 
+import boto3
 
 app = Flask(__name__)
 app.debug = False
@@ -17,6 +19,7 @@ YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
+aws_s3_bucket = os.environ["AWS_STORAGE_BUCKET_NAME"]
 
 SRC_IMAGE_PATH = "static/images/{}.jpg"
 MAIN_IMAGE_PATH = "static/images/{}_main.jpg"
@@ -46,6 +49,22 @@ def handle_message(event):
         TextSendMessage(text=event.message.text))
 
 @handler.add(MessageEvent, message=ImageMessage)
+def date_the_image(src: str, desc: str) -> None:
+    im = Image.open(src)
+    
+    s3_resource = boto3.resource("s3")
+    s3_resource.Bucket(aws_s3_bucket).upload_file(message_id, message_id)
+    
+    s3_client = boto3.client("s3")
+    s3_image_url = s3_client.generater_presigned_url(
+           ClientMethod = "get_object",
+           Params = {"Bucket": aws_s3_bucket, "Key": message_id},
+           ExpiresIn = 10,
+           HttpMethod = "GET"
+    )
+
+    im.save(desc)
+
 def handle_image(event):
     message_id = event.message.id
 
