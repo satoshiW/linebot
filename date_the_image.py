@@ -1,6 +1,8 @@
 from PIL import Image
 import boto3
 
+aws_s3_bucket = os.environ["AWS_STORAGE_BUCKET_NAME"]
+
 def date_the_image(src: str, desc: str) -> None:
     im = Image.open(src)
     
@@ -26,5 +28,5 @@ def date_the_image(src: str, desc: str) -> None:
     	exif_table[tag] = value
 
     return exif_table.get("DateTimeOriginal")
-    
-    im.save(desc)"""
+    """
+    im.save(desc)
