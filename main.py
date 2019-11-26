@@ -74,8 +74,8 @@ def handle_image(event):
     # 画像をHerokuへ保存
     save_image(message_id, src_image_path)
     
-    date_the_image(src=src_image_path, desc=Path(main_image_path).absolute())
-    date_the_image(src=src_image_path, desc=Path(preview_image_path).absolute())
+    date_the_image(src_image_path, Path(main_image_path).absolute())
+    date_the_image(src_image_path, Path(preview_image_path).absolute())
 
     image_message = ImageSendMessage(
         original_content_url=f"s3_image_url",
