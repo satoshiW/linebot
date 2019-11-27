@@ -48,8 +48,9 @@ def handle_message(event):
         TextSendMessage(text=event.message.text))
 
 @handler.add(MessageEvent, message=ImageMessage)
+message_id = event.message.id
+
 def handle_image(event):
-    message_id = event.message.id
 
     src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
     main_image_path = MAIN_IMAGE_PATH.format(message_id)
