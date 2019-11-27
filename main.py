@@ -18,7 +18,7 @@ YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
-aws_s3_bucket = "piccaso"
+aws_s3_bucket = os.environ["AWS_STORAGE_BUCKET_NAME"]
 
 SRC_IMAGE_PATH = "static/images/{}.jpg"
 MAIN_IMAGE_PATH = "static/images/{}_main.jpg"
@@ -95,8 +95,8 @@ def date_the_image(src: str, desc: str) -> None:
     im = Image.open(src)
     im.save(desc)
     
-    s3_resource = boto3.resource("s3")
-    s3_resource.Bucket(aws_s3_bucket).upload_file("1.jpg", "1.jpg")
+    s3 = boto3.resource("s3")
+    s3.Object(aws_s3_bucket).upload_file("1.jpg", "1.jpg")
     
     s3_client = boto3.client("s3")
     s3_image_url = s3_client.generate_presigned_url(
