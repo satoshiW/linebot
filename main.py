@@ -98,7 +98,7 @@ def date_the_image(src: str, desc: str) -> None:
     s3_resource.Bucket(aws_s3_bucket).upload_file("1.jpg", "1.jpg")
     
     s3_client = boto3.client("s3")
-    s3_image_url = s3_client.generater_presigned_url(
+    s3_image_url = s3_client.generate_presigned_url(
            ClientMethod = "get_object",
            Params = {"Bucket": aws_s3_bucket, "Key": "1.jpg"},
            ExpiresIn = 10,
