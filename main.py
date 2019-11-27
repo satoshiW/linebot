@@ -93,6 +93,7 @@ def save_image(message_id: str, save_path: str) -> None:
 
 def date_the_image(src: str, desc: str) -> None:
     im = Image.open(src)
+    im.save(desc)
     
     s3_resource = boto3.resource("s3")
     s3_resource.Bucket(aws_s3_bucket).upload_file("1.jpg", "1.jpg")
@@ -104,9 +105,6 @@ def date_the_image(src: str, desc: str) -> None:
            ExpiresIn = 10,
            HttpMethod = "GET"
     )
-
-    im.save(desc)
-
 
 """
     im = Image.open(chunk)
