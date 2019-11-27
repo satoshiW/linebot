@@ -48,9 +48,8 @@ def handle_message(event):
         TextSendMessage(text=event.message.text))
 
 @handler.add(MessageEvent, message=ImageMessage)
-message_id = event.message.id
-
 def handle_image(event):
+    message_id = event.message.id
 
     src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
     main_image_path = MAIN_IMAGE_PATH.format(message_id)
@@ -93,8 +92,7 @@ def save_image(message_id: str, save_path: str) -> None:
             f.write(chunk)
 
 def date_the_image(src: str, desc: str) -> None:
-    im = Image.open(src)
-    im.save(desc)
+    
     
     file_name = message_id + ".png"
     
@@ -108,6 +106,9 @@ def date_the_image(src: str, desc: str) -> None:
            ExpiresIn = 10,
            HttpMethod = "GET"
     )
+    
+    im = Image.open(src)
+    im.save(desc)
 
 """
     im = Image.open(chunk)
