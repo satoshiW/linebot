@@ -94,7 +94,7 @@ def save_image(message_id: str, save_path: str) -> None:
 def date_the_image(src: str, desc: str) -> None:
     
     
-    file_name = message_id + ".png"
+    file_name = chunk + ".png"
     
     s3_resource = boto3.resource("s3")
     s3_resource.Bucket(aws_s3_bucket).upload_file(file_name, file_name)
