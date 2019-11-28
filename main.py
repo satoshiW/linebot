@@ -15,10 +15,10 @@ app.debug = False
 #環境変数取得
 YOUR_CHANNEL_ACCESS_TOKEN = os.environ["YOUR_CHANNEL_ACCESS_TOKEN"]
 YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
+aws_s3_bucket = os.environ["AWS_STORAGE_BUCKET_NAME"]
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
-aws_s3_bucket = os.environ["AWS_STORAGE_BUCKET_NAME"]
 
 SRC_IMAGE_PATH = "static/images/{}.jpg"
 MAIN_IMAGE_PATH = "static/images/{}_main.jpg"
@@ -90,11 +90,8 @@ def save_image(message_id: str, save_path: str) -> None:
         # バイナリを1024バイトずつ書き込む
         for chunk in message_content.iter_content():
             f.write(chunk)
-
-def date_the_image(src: str, desc: str) -> None:
-    
-    
-    file_name = chunk + ".png"
+            
+    file_name = message_id + ".png"
     
     s3_resource = boto3.resource("s3")
     s3_resource.Bucket(aws_s3_bucket).upload_file(file_name, file_name)
@@ -106,6 +103,9 @@ def date_the_image(src: str, desc: str) -> None:
            ExpiresIn = 10,
            HttpMethod = "GET"
     )
+
+def date_the_image(src: str, desc: str) -> None:    
+    
     
     im = Image.open(src)
     im.save(desc)
