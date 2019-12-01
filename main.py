@@ -80,10 +80,9 @@ def handle_image(event):
 
     # 画像を削除する
 #    src_image_path.unlink()
-    
-#save_path = Path(f"static/images/{message_id}.jpg").absolute()
 
 def save_image(message_id: str, save_path: str) -> None:
+    save_path = Path(f"static/images/{message_id}.jpg").absolute()
     # message_idから画像のバイナリデータを取得
     message_content = line_bot_api.get_message_content(message_id)
     with open(save_path, "wb") as f:
@@ -91,7 +90,7 @@ def save_image(message_id: str, save_path: str) -> None:
         for chunk in message_content.iter_content():
             f.write(chunk)
             
-    file_name = message_id + ".png"
+    file_name = message_id + ".jpg"
     
     s3_resource = boto3.resource("s3")
     s3_resource.Bucket(aws_s3_bucket).upload_file(file_name, file_name)
@@ -105,8 +104,6 @@ def save_image(message_id: str, save_path: str) -> None:
     )
 
 def date_the_image(src: str, desc: str) -> None:    
-    
-    
     im = Image.open(src)
     im.save(desc)
 
