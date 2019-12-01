@@ -62,8 +62,8 @@ def handle_image(event):
     date_the_image(src_image_path, Path(preview_image_path).absolute())
 
     image_message = ImageSendMessage(
-        original_content_url = s3_image_url,
-        preview_image_url = s3_image_url
+        original_content_url = f"s3_image_url",
+        preview_image_url = f"s3_image_url"
     )
 
     """
@@ -82,14 +82,6 @@ def handle_image(event):
 #    src_image_path.unlink()
 
 def save_image(message_id: str, save_path: str) -> None:
-    save_path = Path(f"static/images/{message_id}.jpg").absolute()
-    # message_idから画像のバイナリデータを取得
-    message_content = line_bot_api.get_message_content(message_id)
-    with open(save_path, "wb") as f:
-        # バイナリを1024バイトずつ書き込む
-        for chunk in message_content.iter_content():
-            f.write(chunk)
-            
     file_name = message_id + ".jpg"
     
     s3_resource = boto3.resource("s3")
@@ -102,6 +94,16 @@ def save_image(message_id: str, save_path: str) -> None:
            ExpiresIn = 10,
            HttpMethod = "GET"
     )
+    
+    save_path = Path(f"static/images/{message_id}.jpg").absolute()
+    # message_idから画像のバイナリデータを取得
+    message_content = line_bot_api.get_message_content(message_id)
+    with open(save_path, "wb") as f:
+        # バイナリを1024バイトずつ書き込む
+        for chunk in message_content.iter_content():
+            f.write(chunk)
+            
+    
 
 def date_the_image(src: str, desc: str) -> None:    
     im = Image.open(src)
