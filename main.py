@@ -62,8 +62,8 @@ def handle_image(event):
     date_the_image(src_image_path, Path(preview_image_path).absolute())
 
     image_message = ImageSendMessage(
-        original_content_url = s3_image_url,
-        preview_image_url = s3_image_url
+        original_content_url = f"s3_image_url",
+        preview_image_url = f"s3_image_url"
     )
 
     """
@@ -75,7 +75,7 @@ def handle_image(event):
 
     app.logger.info(f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}")
     """
-    app.logger.info(s3_image_url)
+    app.logger.info(f"s3_image_url")
     line_bot_api.reply_message(event.reply_token, image_message)
 
     # 画像を削除する
@@ -99,7 +99,7 @@ def save_image(message_id: str, save_path: str) -> None:
     s3_image_url = s3_client.generate_presigned_url(
            ClientMethod = "get_object",
            Params = {"Bucket": aws_s3_bucket, "Key": file_name},
-           ExpiresIn = 10,
+           ExpiresIn = 100,
            HttpMethod = "GET"
     )
 
