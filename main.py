@@ -60,13 +60,13 @@ def handle_image(event):
     
     date_the_image(src_image_path, Path(main_image_path).absolute())
     date_the_image(src_image_path, Path(preview_image_path).absolute())
-
+    """
     image_message = ImageSendMessage(
         original_content_url = f"s3_image_url",
         preview_image_url = f"s3_image_url"
-    )
+    )"""
 
-    """
+    
     # 画像の送信
     image_message = ImageSendMessage(
         original_content_url=f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}",
@@ -74,12 +74,12 @@ def handle_image(event):
     )
 
     app.logger.info(f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}")
-    """
-    app.logger.info(f"s3_image_url")
+    
+    #app.logger.info(f"s3_image_url")
     line_bot_api.reply_message(event.reply_token, image_message)
 
     # 画像を削除する
-#    src_image_path.unlink()
+    #src_image_path.unlink()
 
 def save_image(message_id: str, save_path: str) -> None:
     #save_path = Path(f"static/images/{message_id}.jpg").absolute()
@@ -89,7 +89,7 @@ def save_image(message_id: str, save_path: str) -> None:
         # バイナリを1024バイトずつ書き込む
         for chunk in message_content.iter_content():
             f.write(chunk)
-            
+    """
     file_name = message_id + ".jpg"
     
     s3_resource = boto3.resource("s3")
@@ -101,7 +101,7 @@ def save_image(message_id: str, save_path: str) -> None:
            Params = {"Bucket": aws_s3_bucket, "Key": file_name},
            ExpiresIn = 100,
            HttpMethod = "GET"
-    )
+    )"""
 
 def date_the_image(src: str, desc: str) -> None:    
     im = Image.open(src)
