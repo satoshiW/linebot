@@ -107,8 +107,8 @@ def date_the_image(src: str, desc: str) -> None:
     im = Image.open(src)
     im.save(desc)
 
-"""
-    im = Image.open(chunk)
+
+    im = Image.open(desc)
     
     try:
     	exif = im._getexif()
@@ -121,7 +121,7 @@ def date_the_image(src: str, desc: str) -> None:
     	exif_table[tag] = value
 
     return exif_table.get("DateTimeOriginal")
-"""
+
 if __name__ == "__main__":
 #    app.run()
     port = int(os.getenv("PORT", 5000))
