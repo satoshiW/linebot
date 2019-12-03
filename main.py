@@ -65,7 +65,20 @@ def handle_image(event):
         original_content_url = f"s3_image_url",
         preview_image_url = f"s3_image_url"
     )"""
+    
+     im = Image.open(desc)
+    
+    try:
+    	exif = im._getexif()
+    except AttributeError:
+    	return {}
+    	
+    exif_table = {}
+    for tag_id, value in exif.items():
+    	tag = TAGS.get(tag_id, tag_id)
+    	exif_table[tag] = value
 
+    return exif_table.get("DateTimeOriginal")
     
     # 画像の送信
     image_message = ImageSendMessage(
@@ -108,19 +121,7 @@ def date_the_image(src: str, desc: str) -> None:
     im.save(desc)
 
 
-    im = Image.open(desc)
-    
-    try:
-    	exif = im._getexif()
-    except AttributeError:
-    	return {}
-    	
-    exif_table = {}
-    for tag_id, value in exif.items():
-    	tag = TAGS.get(tag_id, tag_id)
-    	exif_table[tag] = value
-
-    return exif_table.get("DateTimeOriginal")
+   
 
 if __name__ == "__main__":
 #    app.run()
