@@ -66,7 +66,7 @@ def handle_image(event):
         preview_image_url = f"s3_image_url"
     )"""
     
-     im = Image.open(desc)
+    im = Image.open(desc)
     
     try:
     	exif = im._getexif()
