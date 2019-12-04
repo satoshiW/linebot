@@ -67,7 +67,7 @@ def handle_image(event):
     )"""
     
     try:
-    	exif = Image.open(src_image_path)._getexif()
+    	exif = Image.open(main_image_path)._getexif()
     except AttributeError:
     	return {}
     	
