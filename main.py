@@ -66,10 +66,8 @@ def handle_image(event):
         preview_image_url = f"s3_image_url"
     )"""
     
-    im = Image.open(desc)
-    
     try:
-    	exif = im._getexif()
+    	exif = Image.open(src_image_path)._getexif()
     except AttributeError:
     	return {}
     	
@@ -119,9 +117,6 @@ def save_image(message_id: str, save_path: str) -> None:
 def date_the_image(src: str, desc: str) -> None:    
     im = Image.open(src)
     im.save(desc)
-
-
-   
 
 if __name__ == "__main__":
 #    app.run()
