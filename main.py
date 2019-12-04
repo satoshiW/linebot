@@ -55,7 +55,7 @@ def handle_image(event):
     main_image_path = MAIN_IMAGE_PATH.format(message_id)
     preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
 
-　try:
+    try:
     	exif = Image.open(src_image_path)._getexif()
     except AttributeError:
     	return {}
