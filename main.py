@@ -55,6 +55,18 @@ def handle_image(event):
     main_image_path = MAIN_IMAGE_PATH.format(message_id)
     preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
 
+　try:
+    	exif = Image.open(src_image_path)._getexif()
+    except AttributeError:
+    	return {}
+    	
+    exif_table = {}
+    for tag_id, value in exif.items():
+    	tag = TAGS.get(tag_id, tag_id)
+    	exif_table[tag] = value
+
+    return exif_table.get("DateTimeOriginal")
+
     # 画像をHerokuへ保存
     save_image(message_id, src_image_path)
     
@@ -66,17 +78,7 @@ def handle_image(event):
         preview_image_url = f"s3_image_url"
     )"""
     
-    try:
-    	exif = Image.open(message_id + ".jpg")._getexif()
-    except AttributeError:
-    	return {}
-    	
-    exif_table = {}
-    for tag_id, value in exif.items():
-    	tag = TAGS.get(tag_id, tag_id)
-    	exif_table[tag] = value
-
-    return exif_table.get("DateTimeOriginal")
+    
     
     # 画像の送信
     image_message = ImageSendMessage(
