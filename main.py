@@ -65,9 +65,9 @@ def handle_image(event):
         original_content_url = f"s3_image_url",
         preview_image_url = f"s3_image_url"
     )"""
-    """
+    
     try:
-    	exif = Image.open(main_image_path)._getexif()
+    	exif = Image.open(message_id + ".jpg")._getexif()
     except AttributeError:
     	return {}
     	
@@ -77,7 +77,7 @@ def handle_image(event):
     	exif_table[tag] = value
 
     return exif_table.get("DateTimeOriginal")
-    """
+    
     # 画像の送信
     image_message = ImageSendMessage(
         original_content_url=f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}",
