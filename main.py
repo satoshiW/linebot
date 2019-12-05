@@ -100,7 +100,7 @@ def save_image(message_id: str, save_path: str) -> None:
         # バイナリを1024バイトずつ書き込む
         for chunk in message_content.iter_content():
             f.write(chunk)
-        print(chunk)
+        print(save_path)
     """
     file_name = message_id + ".jpg"
     
