@@ -54,7 +54,7 @@ def handle_image(event):
     src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
     main_image_path = MAIN_IMAGE_PATH.format(message_id)
     preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
-
+    """
     try:
     	exif = Image.open(src_image_path)._getexif()
     except AttributeError:
@@ -66,7 +66,7 @@ def handle_image(event):
     	exif_table[tag] = value
 
     return exif_table.get("DateTimeOriginal")
-
+    """
     # 画像をHerokuへ保存
     save_image(message_id, src_image_path)
     
@@ -77,8 +77,6 @@ def handle_image(event):
         original_content_url = f"s3_image_url",
         preview_image_url = f"s3_image_url"
     )"""
-    
-    
     
     # 画像の送信
     image_message = ImageSendMessage(
@@ -102,6 +100,7 @@ def save_image(message_id: str, save_path: str) -> None:
         # バイナリを1024バイトずつ書き込む
         for chunk in message_content.iter_content():
             f.write(chunk)
+        print(chunk)
     """
     file_name = message_id + ".jpg"
     
