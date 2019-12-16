@@ -118,24 +118,23 @@ def save_image(message_id: str, save_path: str) -> None:
     )"""
 
 def webhook():
-    for event in events:
-        date_picker = TemplateSendMessage(
-            alt_text='撮影日を選択',
-            template=ButtonsTemplate(
-                text='撮影日を選択',
-                title='YYYY-MM-dd',
-                actions=[
-                    DatetimePickerTemplateAction(
-                        label='選択',
-                        data='action=buy&itemid=1',
-                        mode='date',
-                        initial='2017-04-01',
-                        min='2017-04-01',
-                        max='2099-12-31'
-                    )
-                ]
-            )
+    date_picker = TemplateSendMessage(
+        alt_text='撮影日を選択',
+        template=ButtonsTemplate(
+            text='撮影日を選択',
+            title='YYYY-MM-dd',
+            actions=[
+                DatetimePickerTemplateAction(
+                    label='選択',
+                    data='action=buy&itemid=1',
+                    mode='date',
+                    initial='2017-04-01',
+                    min='2017-04-01',
+                    max='2099-12-31'
+                )
+            ]
         )
+    )
 
         line_bot_api.reply_message(
             event.reply_token,
