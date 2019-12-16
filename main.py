@@ -136,10 +136,10 @@ def webhook():
         )
     )
 
-        line_bot_api.reply_message(
-            event.reply_token,
-            date_picker
-        )
+    line_bot_api.reply_message(
+        event.reply_token,
+        date_picker
+    )
 
 def date_the_image(src: str, desc: str) -> None:    
     im = Image.open(src)
