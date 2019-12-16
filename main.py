@@ -118,7 +118,7 @@ def save_image(message_id: str, save_path: str) -> None:
     )"""
 
 def webhook():
-        for event in events:
+    for event in events:
         date_picker = TemplateSendMessage(
             alt_text='撮影日を選択',
             template=ButtonsTemplate(
