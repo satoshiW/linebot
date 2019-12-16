@@ -1,13 +1,13 @@
 from flask import Flask, request, abort
-from linebot import (LineBotApi, WebhookHandler)
-from linebot.exceptions import (InvalidSignatureError)
-from linebot.models import (ImageMessage, ImageSendMessage, MessageEvent, TextMessage, TextSendMessage)
+from linebot import LineBotApi, WebhookHandler
+from linebot.exceptions import InvalidSignatureError
+from linebot.models import (TemplateSendMessage, ButtonsTemplate, DatetimePickerTemplateAction, ImageMessage, ImageSendMessage, MessageEvent, TextMessage, TextSendMessage)
 
 from pathlib import Path
-from PIL.ExifTags import TAGS
+#from PIL.ExifTags import TAGS
 from PIL import Image
 import os 
-import boto3
+#import boto3
 
 app = Flask(__name__)
 app.debug = False
@@ -70,6 +70,8 @@ def handle_image(event):
     # 画像をHerokuへ保存
     save_image(message_id, src_image_path)
     
+    webhook()
+    
     date_the_image(src_image_path, Path(main_image_path).absolute())
     date_the_image(src_image_path, Path(preview_image_path).absolute())
     """
@@ -100,7 +102,7 @@ def save_image(message_id: str, save_path: str) -> None:
         # バイナリを1024バイトずつ書き込む
         for chunk in message_content.iter_content():
             f.write(chunk)
-        print(save_path)
+
     """
     file_name = message_id + ".jpg"
     
@@ -114,6 +116,31 @@ def save_image(message_id: str, save_path: str) -> None:
            ExpiresIn = 100,
            HttpMethod = "GET"
     )"""
+
+def webhook():
+        for event in events:
+        date_picker = TemplateSendMessage(
+            alt_text='撮影日を選択',
+            template=ButtonsTemplate(
+                text='撮影日を選択',
+                title='YYYY-MM-dd',
+                actions=[
+                    DatetimePickerTemplateAction(
+                        label='選択',
+                        data='action=buy&itemid=1',
+                        mode='date',
+                        initial='2017-04-01',
+                        min='2017-04-01',
+                        max='2099-12-31'
+                    )
+                ]
+            )
+        )
+
+        line_bot_api.reply_message(
+            event.reply_token,
+            date_picker
+        )
 
 def date_the_image(src: str, desc: str) -> None:    
     im = Image.open(src)
