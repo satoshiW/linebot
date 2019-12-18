@@ -69,8 +69,6 @@ def handle_image(event):
     """
     # 画像をHerokuへ保存
     save_image(message_id, src_image_path)
-
-    webhook(event)
     
     date_the_image(src_image_path, Path(main_image_path).absolute())
     date_the_image(src_image_path, Path(preview_image_path).absolute())
@@ -117,6 +115,7 @@ def save_image(message_id: str, save_path: str) -> None:
            HttpMethod = "GET"
     )"""
 
+@handler.add(PostbackEvent)
 def webhook(event):
     date_picker = TemplateSendMessage(
         alt_text='撮影日を選択',
