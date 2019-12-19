@@ -78,22 +78,6 @@ def handle_image(event):
         preview_image_url = f"s3_image_url"
     )"""
     
-    # 画像の送信
-    image_message = ImageSendMessage(
-        original_content_url=f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}",
-        preview_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{preview_image_path}"
-    )
-
-    app.logger.info(f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}")
-    
-    #app.logger.info(f"s3_image_url")
-    line_bot_api.reply_message(event.reply_token, image_message)
-
-    # 画像を削除する
-    #src_image_path.unlink()
-
-@handler.add(PostbackEvent)
-def webhook(event):
     date_picker = TemplateSendMessage(
         alt_text='撮影日を選択',
         template=ButtonsTemplate(
@@ -116,7 +100,20 @@ def webhook(event):
         event.reply_token,
         date_picker
     )
+    
+    # 画像の送信
+    image_message = ImageSendMessage(
+        original_content_url=f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}",
+        preview_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{preview_image_path}"
+    )
 
+    app.logger.info(f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}")
+    
+    #app.logger.info(f"s3_image_url")
+    line_bot_api.reply_message(event.reply_token, image_message)
+
+    # 画像を削除する
+    #src_image_path.unlink()
 
 def save_image(message_id: str, save_path: str) -> None:
     #save_path = Path(f"static/images/{message_id}.jpg").absolute()
