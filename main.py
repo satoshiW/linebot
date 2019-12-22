@@ -67,7 +67,7 @@ def handle_image(event):
 
     return exif_table.get("DateTimeOriginal")
     """
-    # 画像をHerokuへ保存
+    # 画像をHerokuへ一時保存
     save_image(message_id, src_image_path)
     
     date_the_image(src_image_path, Path(main_image_path).absolute())
@@ -96,6 +96,8 @@ def handle_image(event):
         )
     )
 
+@handler.add(PostbackEvent)
+def handle_postback(event):
     line_bot_api.reply_message(
         event.reply_token,
         date_picker
