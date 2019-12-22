@@ -78,8 +78,6 @@ def handle_image(event):
         preview_image_url = f"s3_image_url"
     )"""
 
-@handler.add(PostbackEvent)
-def handle_postback(event):
     date_picker = TemplateSendMessage(
         alt_text='撮影日を選択',
         template=ButtonsTemplate(
@@ -98,10 +96,12 @@ def handle_postback(event):
         )
     )
 
+@handler.add(PostbackEvent)
+def handle_postback(event):
     line_bot_api.reply_message(
         event.reply_token,
-        date_picker
-    )
+        TextSendMessage(text=event.postback.params['date']
+    ))
     
     # 画像の送信
     image_message = ImageSendMessage(
