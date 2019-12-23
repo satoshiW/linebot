@@ -5,7 +5,7 @@ from linebot.models import (PostbackEvent, TemplateSendMessage, ButtonsTemplate,
 
 from pathlib import Path
 #from PIL.ExifTags import TAGS
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 import os 
 #import boto3
 
@@ -70,14 +70,6 @@ def handle_image(event):
     # 画像をHerokuへ一時保存
     save_image(message_id, src_image_path)
     
-    date_the_image(src_image_path, Path(main_image_path).absolute())
-    date_the_image(src_image_path, Path(preview_image_path).absolute())
-    """
-    image_message = ImageSendMessage(
-        original_content_url = f"s3_image_url",
-        preview_image_url = f"s3_image_url"
-    )"""
-
     date_picker = TemplateSendMessage(
         alt_text='撮影日を選択',
         template=ButtonsTemplate(
@@ -104,10 +96,17 @@ def handle_image(event):
 @handler.add(PostbackEvent)
 def handle_postback(event):
     line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=event.postback.params['date']
-    ))
+        event.reply_token
+    )
     
+    date_the_image(src_image_path, Path(main_image_path).absolute())
+    date_the_image(src_image_path, Path(preview_image_path).absolute())
+    """
+    image_message = ImageSendMessage(
+        original_content_url = f"s3_image_url",
+        preview_image_url = f"s3_image_url"
+    )"""
+
     # 画像の送信
     image_message = ImageSendMessage(
         original_content_url=f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}",
@@ -127,7 +126,7 @@ def save_image(message_id: str, save_path: str) -> None:
     # message_idから画像のバイナリデータを取得
     message_content = line_bot_api.get_message_content(message_id)
     with open(save_path, "wb") as f:
-        # バイナリを1024バイトずつ書き込む
+        # 取得したバイナリデータを書き込む
         for chunk in message_content.iter_content():
             f.write(chunk)
 
@@ -145,9 +144,21 @@ def save_image(message_id: str, save_path: str) -> None:
            HttpMethod = "GET"
     )"""
 
-
 def date_the_image(src: str, desc: str) -> None:    
     im = Image.open(src)
+    draw = ImageDraw.Draw(im)
+    font = ImageFont.truetype("./fonts/Harlow Solid Regular.ttf", 60)
+    text = event.postback.params['date']
+    
+    x = 10
+    y = 10
+    margin = 5
+    text_width = draw.textsize(text, font=font)[0] + margin
+    text_height = draw.textsize(text, font=font)[1] + margin
+    draw.rectangle(
+        (x - margin, y - margin, x + text_width, y + text_height), fill=(255, 255, 255)
+    )
+    draw.text((x, y), text, fill=(0, 0, 0), font=font)
     im.save(desc)
 
 if __name__ == "__main__":
