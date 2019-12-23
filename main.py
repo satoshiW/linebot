@@ -88,16 +88,13 @@ def handle_image(event):
         )
     )
     
-    line_bot_api.reply_message(
-        event.reply_token,
-        date_picker
-    )
+
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
     line_bot_api.reply_message(
         event.reply_token,
-        date_picker
+        
     )
     
     date_the_image(src_image_path, Path(main_image_path).absolute())
