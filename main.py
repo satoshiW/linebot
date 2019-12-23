@@ -144,7 +144,7 @@ def save_image(message_id: str, save_path: str) -> None:
 def date_the_image(src: str, desc: str) -> None:    
     im = Image.open(src)
     draw = ImageDraw.Draw(im)
-    font = ImageFont.truetype("./fonts/Harlow Solid Regular.ttf", 60)
+    font = ImageFont.truetype("/System/Library/Fonts/Helvetica.dfont", 60)
     text = event.postback.params['date']
     
     x = 10
