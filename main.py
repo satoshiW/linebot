@@ -24,10 +24,6 @@ SRC_IMAGE_PATH = "static/images/{}.jpg"
 MAIN_IMAGE_PATH = "static/images/{}_main.jpg"
 PREVIEW_IMAGE_PATH = "static/images/{}_preview.jpg"
 
-src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
-main_image_path = MAIN_IMAGE_PATH.format(message_id)
-preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
-
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
@@ -55,7 +51,9 @@ def handle_message(event):
 def handle_image(event):
     message_id = event.message.id
 
-    
+    src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
+    main_image_path = MAIN_IMAGE_PATH.format(message_id)
+    preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
     """
     try:
     	exif = Image.open(src_image_path)._getexif()
@@ -95,10 +93,10 @@ def handle_image(event):
         date_picker
     )
 
-@handler.add(PostbackEvent)
-def handle_postback(event):
-    date_the_image(src_image_path, Path(main_image_path).absolute())
-    date_the_image(src_image_path, Path(preview_image_path).absolute())
+    @handler.add(PostbackEvent)
+    def handle_postback(event):
+        date_the_image(src_image_path, Path(main_image_path).absolute())
+        date_the_image(src_image_path, Path(preview_image_path).absolute())
     
     """
     image_message = ImageSendMessage(
@@ -107,15 +105,15 @@ def handle_postback(event):
     )"""
 
     # 画像の送信
-    image_message = ImageSendMessage(
+        image_message = ImageSendMessage(
         original_content_url=f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}",
         preview_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{preview_image_path}"
-    )
+        )
 
-    app.logger.info(f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}")
+        app.logger.info(f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}")
     
     #app.logger.info(f"s3_image_url")
-    line_bot_api.reply_message(event.reply_token, image_message)
+        line_bot_api.reply_message(event.reply_token, image_message)
 
     # 画像を削除する
     #src_image_path.unlink()
