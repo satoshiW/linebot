@@ -93,10 +93,10 @@ def handle_image(event):
         date_picker
     )
 
-
+ @handler.add(PostbackEvent)
+ def handle_postback(event):
     date_the_image(src_image_path, Path(main_image_path).absolute())
     date_the_image(src_image_path, Path(preview_image_path).absolute())
-    
     
     """
     image_message = ImageSendMessage(
