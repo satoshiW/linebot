@@ -93,8 +93,6 @@ def handle_image(event):
         date_picker
     )
 
-    
-
     date_the_image(src_image_path, Path(main_image_path).absolute())
     date_the_image(src_image_path, Path(preview_image_path).absolute())
     
@@ -142,9 +140,10 @@ def save_image(message_id: str, save_path: str) -> None:
     )"""
 
 def date_the_image(src: str, desc: str) -> None:
+    im = Image.open(src)
     @handler.add(PostbackEvent)
     def handle_postback(event):
-        im = Image.open(src)
+        
         draw = ImageDraw.Draw(im)
         font = ImageFont.truetype("./fonts/Helvetica.ttc", 60)
         text = event.postback.params['date']
@@ -158,7 +157,8 @@ def date_the_image(src: str, desc: str) -> None:
             (x - margin, y - margin, x + text_width, y + text_height), fill=(255, 255, 255)
         )
         draw.text((x, y), text, fill=(0, 0, 0), font=font)
-        im.save(desc)
+        
+    im.save(desc)
 
 if __name__ == "__main__":
 #    app.run()
