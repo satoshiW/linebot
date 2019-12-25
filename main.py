@@ -93,12 +93,10 @@ def handle_image(event):
         date_picker
     )
 
-    @handler.add(PostbackEvent)
-    def handle_postback(event):
-        text = event.postback.params['date']
+    
 
-        date_the_image(src_image_path, Path(main_image_path).absolute())
-        date_the_image(src_image_path, Path(preview_image_path).absolute())
+    date_the_image(src_image_path, Path(main_image_path).absolute())
+    date_the_image(src_image_path, Path(preview_image_path).absolute())
     
     """
     image_message = ImageSendMessage(
@@ -143,22 +141,24 @@ def save_image(message_id: str, save_path: str) -> None:
            HttpMethod = "GET"
     )"""
 
-def date_the_image(src: str, desc: str) -> None:    
-    im = Image.open(src)
-    draw = ImageDraw.Draw(im)
-    font = ImageFont.truetype("./fonts/Helvetica.ttc", 60)
-    
+def date_the_image(src: str, desc: str) -> None:
+    @handler.add(PostbackEvent)
+    def handle_postback(event):
+        im = Image.open(src)
+        draw = ImageDraw.Draw(im)
+        font = ImageFont.truetype("./fonts/Helvetica.ttc", 60)
+        text = event.postback.params['date']
 
-    x = 10
-    y = 10
-    margin = 5
-    text_width = draw.textsize(text, font=font)[0] + margin
-    text_height = draw.textsize(text, font=font)[1] + margin
-    draw.rectangle(
-        (x - margin, y - margin, x + text_width, y + text_height), fill=(255, 255, 255)
-    )
-    draw.text((x, y), text, fill=(0, 0, 0), font=font)
-    im.save(desc)
+        x = 10
+        y = 10
+        margin = 5
+        text_width = draw.textsize(text, font=font)[0] + margin
+        text_height = draw.textsize(text, font=font)[1] + margin
+        draw.rectangle(
+            (x - margin, y - margin, x + text_width, y + text_height), fill=(255, 255, 255)
+        )
+        draw.text((x, y), text, fill=(0, 0, 0), font=font)
+        im.save(desc)
 
 if __name__ == "__main__":
 #    app.run()
