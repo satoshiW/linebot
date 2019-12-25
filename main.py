@@ -95,10 +95,6 @@ def handle_image(event):
 
     @handler.add(PostbackEvent)
     def handle_postback(event):
-        line_bot_api.reply_message(
-            event.reply_token,
-            text=event.postback.params['date']
-        )
 
         date_the_image(src_image_path, Path(main_image_path).absolute())
         date_the_image(src_image_path, Path(preview_image_path).absolute())
@@ -150,6 +146,7 @@ def date_the_image(src: str, desc: str) -> None:
     im = Image.open(src)
     draw = ImageDraw.Draw(im)
     font = ImageFont.truetype("./fonts/Helvetica.ttc", 60)
+    text = event.postback.params['date']
 
     x = 10
     y = 10
