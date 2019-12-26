@@ -52,6 +52,8 @@ def handle_image(event):
     message_id = event.message.id
 
     src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
+    main_image_path = MAIN_IMAGE_PATH.format(message_id)
+    preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
     
     """
     try:
@@ -92,13 +94,9 @@ def handle_image(event):
         date_picker
     )
 
-@handler.add(PostbackEvent)
-def handle_postback(event):
-    main_image_path = MAIN_IMAGE_PATH.format(message_id)
-    preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
-
-    date_the_image(src_image_path, Path(main_image_path).absolute())
-    date_the_image(src_image_path, Path(preview_image_path).absolute())
+    def handle_postback(event):
+        date_the_image(src_image_path, Path(main_image_path).absolute())
+        date_the_image(src_image_path, Path(preview_image_path).absolute())
     
     """
     image_message = ImageSendMessage(
@@ -144,7 +142,6 @@ def save_image(message_id: str, save_path: str) -> None:
     )"""
 
 def date_the_image(src: str, desc: str) -> None:
-
     im = Image.open(src)
     draw = ImageDraw.Draw(im)
     font = ImageFont.truetype("./fonts/Helvetica.ttc", 60)
