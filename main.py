@@ -49,6 +49,9 @@ def handle_message(event):
 
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image(event):
+    if event.reply_token == "00000000000000000000000000000000":
+        return
+
     message_id = event.message.id
 
     src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
