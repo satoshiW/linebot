@@ -96,6 +96,7 @@ def get_image(event):
 @handler.add(PostbackEvent)
 def handle_postback(event):
     user_id = event.source.user_id
+    text = event.postback.params['date']
     
     src_image_path = Path(SRC_IMAGE_PATH.format(user_id)).absolute()
     main_image_path = MAIN_IMAGE_PATH.format(user_id)
@@ -158,7 +159,7 @@ def date_the_image(src: str, desc: str) -> None:
     im = Image.open(src)
     draw = ImageDraw.Draw(im)
     font = ImageFont.truetype("./fonts/Helvetica.ttc", 60)
-    text = event.postback.params['date']
+    
 
     x = 10
     y = 10
