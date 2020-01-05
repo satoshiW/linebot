@@ -111,7 +111,7 @@ def handle_postback(event):
     )"""
 
 #@handler.add(MessageEvent, message=ImageMessage)
-def send_image(event):
+#def send_image(event):
     #user_id = event.source.user_id
     
     #main_image_path = MAIN_IMAGE_PATH.format(user_id)
