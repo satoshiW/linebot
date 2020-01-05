@@ -48,15 +48,10 @@ def handle_message(event):
         TextSendMessage(text=event.message.text))
 
 @handler.add(MessageEvent, message=ImageMessage)
-def handle_image(event):
-    if event.reply_token == "00000000000000000000000000000000":
-        return
+def get_image(event):
+    user_id = event.source.user_id
 
-    message_id = event.message.id
-
-    src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
-    main_image_path = MAIN_IMAGE_PATH.format(message_id)
-    preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
+    src_image_path = Path(SRC_IMAGE_PATH.format(user_id)).absolute()
     
     """
     try:
@@ -72,7 +67,7 @@ def handle_image(event):
     return exif_table.get("DateTimeOriginal")
     """
     # 画像をHerokuへ一時保存
-    save_image(message_id, src_image_path)
+    save_image(user_id, src_image_path)
     
     date_picker = TemplateSendMessage(
         alt_text='撮影日を選択',
@@ -97,15 +92,28 @@ def handle_image(event):
         date_picker
     )
 
-    def handle_postback(event):
-        date_the_image(src_image_path, Path(main_image_path).absolute())
-        date_the_image(src_image_path, Path(preview_image_path).absolute())
+@hadler.add(PostbackEvent)
+def handle_postback(event):
+    user_id = event.source.user_id
+    
+    main_image_path = MAIN_IMAGE_PATH.format(user_id)
+    preview_image_path = PREVIEW_IMAGE_PATH.format(user_id)
+    
+    date_the_image(src_image_path, Path(main_image_path).absolute())
+    date_the_image(src_image_path, Path(preview_image_path).absolute())
     
     """
     image_message = ImageSendMessage(
         original_content_url = f"s3_image_url",
         preview_image_url = f"s3_image_url"
     )"""
+
+@handler.add(MessageEvent, message=ImageMessage)
+def send_image(event):
+    user_id = event.source.user_id
+    
+    main_image_path = MAIN_IMAGE_PATH.format(user_id)
+    preview_image_path = PREVIEW_IMAGE_PATH.format(user_id)
 
     # 画像の送信
     image_message = ImageSendMessage(
