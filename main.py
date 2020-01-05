@@ -96,6 +96,7 @@ def get_image(event):
 def handle_postback(event):
     user_id = event.source.user_id
     
+    src_image_path = Path(SRC_IMAGE_PATH.format(user_id)).absolute()
     main_image_path = MAIN_IMAGE_PATH.format(user_id)
     preview_image_path = PREVIEW_IMAGE_PATH.format(user_id)
     
