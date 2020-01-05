@@ -130,10 +130,10 @@ def send_image(event):
     # 画像を削除する
     #src_image_path.unlink()
 
-def save_image(message_id: str, save_path: str) -> None:
+def save_image(user_id: str, save_path: str) -> None:
     #save_path = Path(f"static/images/{message_id}.jpg").absolute()
     # message_idから画像のバイナリデータを取得
-    message_content = line_bot_api.get_message_content(message_id)
+    message_content = line_bot_api.get_message_content(user_id)
     with open(save_path, "wb") as f:
         # 取得したバイナリデータを書き込む
         for chunk in message_content.iter_content():
