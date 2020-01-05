@@ -110,12 +110,12 @@ def handle_postback(event):
         preview_image_url = f"s3_image_url"
     )"""
 
-@handler.add(MessageEvent, message=ImageMessage)
+#@handler.add(MessageEvent, message=ImageMessage)
 def send_image(event):
-    user_id = event.source.user_id
+    #user_id = event.source.user_id
     
-    main_image_path = MAIN_IMAGE_PATH.format(user_id)
-    preview_image_path = PREVIEW_IMAGE_PATH.format(user_id)
+    #main_image_path = MAIN_IMAGE_PATH.format(user_id)
+    #preview_image_path = PREVIEW_IMAGE_PATH.format(user_id)
 
     # 画像の送信
     image_message = ImageSendMessage(
