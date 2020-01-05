@@ -68,7 +68,7 @@ def get_image(event):
     return exif_table.get("DateTimeOriginal")
     """
     # 画像をHerokuへ一時保存
-    save_image(user_id, src_image_path)
+    save_image(message_id, src_image_path)
     
     date_picker = TemplateSendMessage(
         alt_text='撮影日を選択',
