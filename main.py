@@ -92,7 +92,7 @@ def get_image(event):
         date_picker
     )
 
-@hadler.add(PostbackEvent)
+@handler.add(PostbackEvent)
 def handle_postback(event):
     user_id = event.source.user_id
     
