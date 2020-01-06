@@ -96,14 +96,13 @@ def get_image(event):
 @handler.add(PostbackEvent)
 def handle_postback(event):
     user_id = event.source.user_id
-    text = event.postback.params['date']
     
     src_image_path = Path(SRC_IMAGE_PATH.format(user_id)).absolute()
     main_image_path = MAIN_IMAGE_PATH.format(user_id)
     preview_image_path = PREVIEW_IMAGE_PATH.format(user_id)
     
-    date_the_image(src_image_path, Path(main_image_path).absolute())
-    date_the_image(src_image_path, Path(preview_image_path).absolute())
+    date_the_image(src_image_path, Path(main_image_path).absolute(), event)
+    date_the_image(src_image_path, Path(preview_image_path).absolute(), event)
     
     """
     image_message = ImageSendMessage(
@@ -155,11 +154,11 @@ def save_image(message_id: str, save_path: str) -> None:
            HttpMethod = "GET"
     )"""
 
-def date_the_image(src: str, desc: str) -> None:
+def date_the_image(src: str, desc: str, event) -> None:
     im = Image.open(src)
     draw = ImageDraw.Draw(im)
     font = ImageFont.truetype("./fonts/Helvetica.ttc", 60)
-    
+    text = event.postback.params['date']
 
     x = 10
     y = 10
