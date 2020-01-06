@@ -95,6 +95,7 @@ def get_image(event):
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
+    message_id = event.message.id
     user_id = event.source.user_id
     
     src_image_path = Path(SRC_IMAGE_PATH.format(user_id)).absolute()
@@ -122,10 +123,9 @@ def handle_postback(event):
     line_bot_api.reply_message(event.reply_token, image_message)
 
     # 画像を削除
-    (src_image_path, main_image_path, preview_image_path).unlink()
+    #(src_image_path, main_image_path, preview_image_path).unlink()
 
 def save_image(message_id: str, save_path: str) -> None:
-    #save_path = Path(f"static/images/{message_id}.jpg").absolute()
     # message_idから画像のバイナリデータを取得
     message_content = line_bot_api.get_message_content(message_id)
     with open(save_path, "wb") as f:
