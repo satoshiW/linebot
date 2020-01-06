@@ -110,13 +110,6 @@ def handle_postback(event):
         preview_image_url = f"s3_image_url"
     )"""
 
-#@handler.add(MessageEvent, message=ImageMessage)
-#def send_image(event):
-    #user_id = event.source.user_id
-    
-    #main_image_path = MAIN_IMAGE_PATH.format(user_id)
-    #preview_image_path = PREVIEW_IMAGE_PATH.format(user_id)
-
     # 画像の送信
     image_message = ImageSendMessage(
             original_content_url=f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}",
@@ -128,8 +121,8 @@ def handle_postback(event):
     #app.logger.info(f"s3_image_url")
     line_bot_api.reply_message(event.reply_token, image_message)
 
-    # 画像を削除する
-    src_image_path.unlink()
+    # 画像を削除
+    (src_image_path, main_image_path, preview_image_path).unlink()
 
 def save_image(message_id: str, save_path: str) -> None:
     #save_path = Path(f"static/images/{message_id}.jpg").absolute()
