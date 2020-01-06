@@ -129,7 +129,7 @@ def handle_postback(event):
     line_bot_api.reply_message(event.reply_token, image_message)
 
     # 画像を削除する
-    #src_image_path.unlink()
+    src_image_path.unlink()
 
 def save_image(message_id: str, save_path: str) -> None:
     #save_path = Path(f"static/images/{message_id}.jpg").absolute()
