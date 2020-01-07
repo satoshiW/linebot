@@ -15,7 +15,7 @@ app.debug = False
 #環境変数取得
 YOUR_CHANNEL_ACCESS_TOKEN = os.environ["YOUR_CHANNEL_ACCESS_TOKEN"]
 YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
-aws_s3_bucket = os.environ["AWS_STORAGE_BUCKET_NAME"]
+#aws_s3_bucket = os.environ["AWS_STORAGE_BUCKET_NAME"]
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
@@ -50,6 +50,7 @@ def handle_message(event):
 @handler.add(MessageEvent, message=ImageMessage)
 def get_image(event):
     message_id = event.message.id
+    save_message_id(message_id)
     user_id = event.source.user_id
 
     src_image_path = Path(SRC_IMAGE_PATH.format(user_id)).absolute()
@@ -95,10 +96,9 @@ def get_image(event):
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
-    message_id = event.message.id
     user_id = event.source.user_id
     
-    src_image_path = Path(SRC_IMAGE_PATH.format(user_id)).absolute()
+    src_image_path = Path(SRC_IMAGE_PATH.format(save_message_id(message_id))).absolute()
     main_image_path = MAIN_IMAGE_PATH.format(user_id)
     preview_image_path = PREVIEW_IMAGE_PATH.format(user_id)
     
@@ -124,6 +124,9 @@ def handle_postback(event):
 
     # 画像を削除
     #(src_image_path, main_image_path, preview_image_path).unlink()
+
+def save_message_id(message_id):
+    return message_id
 
 def save_image(message_id: str, save_path: str) -> None:
     # message_idから画像のバイナリデータを取得
