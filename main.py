@@ -124,6 +124,8 @@ def handle_postback(event):
 
     # 画像を削除
     src_image_path.unlink()
+    original_content_url.unlink()
+    preview_image_url.unlink()
 
 def save_image(message_id: str, save_path: str) -> None:
     # message_idから画像のバイナリデータを取得
