@@ -114,7 +114,7 @@ def handle_postback(event):
     # 画像の送信
     image_message = ImageSendMessage(
             original_content_url=f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}",
-            preview_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{preview_image_path}"
+            preview_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}"
     )
 
     app.logger.info(f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}")
@@ -123,9 +123,9 @@ def handle_postback(event):
     line_bot_api.reply_message(event.reply_token, image_message)
 
     # 画像を削除
-    src_image_path.unlink()
-    main_image_path.unlink()
-    preview_image_path.unlink()
+    #src_image_path.unlink()
+    #main_image_path.unlink()
+    #preview_image_path.unlink()
 
 def save_image(message_id: str, save_path: str) -> None:
     # message_idから画像のバイナリデータを取得
