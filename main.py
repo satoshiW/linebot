@@ -8,6 +8,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 from datetime import datetime
 import os 
+import random
 #import boto3
 
 app = Flask(__name__)
@@ -24,6 +25,9 @@ handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 SRC_IMAGE_PATH = "static/images/{}.jpg"
 MAIN_IMAGE_PATH = "static/images/{}_main.jpg"
 PREVIEW_IMAGE_PATH = "static/images/{}_preview.jpg"
+
+image_list = []
+image_list.append(random.randint(0, 9999))
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -51,9 +55,9 @@ def handle_message(event):
 @handler.add(MessageEvent, message=ImageMessage)
 def get_image(event):
     message_id = event.message.id
-    user_id = event.source.user_id
+    image_id = event.source.user_id + image_list[0]
 
-    src_image_path = Path(SRC_IMAGE_PATH.format(user_id)).absolute()
+    src_image_path = Path(SRC_IMAGE_PATH.format(image_id)).absolute()
     
     """
     try:
@@ -96,11 +100,11 @@ def get_image(event):
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
-    user_id = event.source.user_id
+    image_id = event.source.user_id + image_list[0]
     
-    src_image_path = Path(SRC_IMAGE_PATH.format(user_id)).absolute()
-    main_image_path = MAIN_IMAGE_PATH.format(user_id)
-    preview_image_path = PREVIEW_IMAGE_PATH.format(user_id)
+    src_image_path = Path(SRC_IMAGE_PATH.format(image_id)).absolute()
+    main_image_path = MAIN_IMAGE_PATH.format(image_id)
+    preview_image_path = PREVIEW_IMAGE_PATH.format(image_id)
     
     date_the_image(src_image_path, Path(main_image_path).absolute(), event)
     date_the_image(src_image_path, Path(preview_image_path).absolute(), event)
@@ -114,7 +118,7 @@ def handle_postback(event):
     # 画像の送信
     image_message = ImageSendMessage(
             original_content_url=f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}",
-            preview_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}"
+            preview_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{preview_image_path}"
     )
 
     app.logger.info(f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}")
