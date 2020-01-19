@@ -28,6 +28,7 @@ PREVIEW_IMAGE_PATH = "static/images/{}_preview.jpg"
 
 image_list = []
 image_list.append(random.randint(0, 9999))
+print(image_list)
 
 @app.route("/callback", methods=['POST'])
 def callback():
