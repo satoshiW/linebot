@@ -55,7 +55,7 @@ def handle_message(event):
 @handler.add(MessageEvent, message=ImageMessage)
 def get_image(event):
     message_id = event.message.id
-    image_id = event.source.user_id + image_list[0]
+    image_id = event.source.user_id + str(image_list[0])
 
     src_image_path = Path(SRC_IMAGE_PATH.format(image_id)).absolute()
     
@@ -100,7 +100,7 @@ def get_image(event):
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
-    image_id = event.source.user_id + image_list[0]
+    image_id = event.source.user_id + str(image_list[0])
     
     src_image_path = Path(SRC_IMAGE_PATH.format(image_id)).absolute()
     main_image_path = MAIN_IMAGE_PATH.format(image_id)
