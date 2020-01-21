@@ -6,7 +6,7 @@ from linebot.models import (PostbackEvent, TemplateSendMessage, ButtonsTemplate,
 from pathlib import Path
 #from PIL.ExifTags import TAGS
 from PIL import Image, ImageDraw, ImageFont
-from datetime import datetime
+import datetime
 import os
 #import boto3
 
@@ -127,8 +127,6 @@ def handle_postback(event):
 
     # 画像を削除
     #src_image_path.unlink()
-    #main_image_path.unlink()
-    #preview_image_path.unlink()
 
 def save_image(message_id: str, save_path: str) -> None:
     # message_idから画像のバイナリデータを取得
