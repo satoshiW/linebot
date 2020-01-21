@@ -7,8 +7,7 @@ from pathlib import Path
 #from PIL.ExifTags import TAGS
 from PIL import Image, ImageDraw, ImageFont
 from datetime import datetime
-import os 
-import random
+import os
 #import boto3
 
 app = Flask(__name__)
@@ -26,6 +25,7 @@ SRC_IMAGE_PATH = "static/images/{}.jpg"
 MAIN_IMAGE_PATH = "static/images/{}_main.jpg"
 PREVIEW_IMAGE_PATH = "static/images/{}_preview.jpg"
 
+#message_idを格納する為の空のリスト
 image_list = []
 
 @app.route("/callback", methods=['POST'])
@@ -76,18 +76,17 @@ def get_image(event):
     save_image(message_id, src_image_path)
     
     date_picker = TemplateSendMessage(
-        alt_text='撮影日を選択',
+        alt_text='撮影日を選択してね',
         template=ButtonsTemplate(
-            text='撮影日を選択',
+            text='撮影日を選択してね',
             title='YYYY-MM-dd',
             actions=[
                 DatetimePickerTemplateAction(
                     label='選択',
                     data='action=buy&itemid=1',
                     mode='date',
-                    initial='2017-04-01',
-                    min='2017-04-01',
-                    max='2099-12-31'
+                    initial=datetime.date.today(),
+                    max=datetime.date.today()
                 )
             ]
         )
