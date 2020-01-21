@@ -154,7 +154,7 @@ def date_the_image(src: str, desc: str, event) -> None:
     im = Image.open(src)
     draw = ImageDraw.Draw(im)
     font = ImageFont.truetype("./fonts/Helvetica.ttc", 60)
-    text = event.postback.params['date'].strftime("%Y/%m/%d")
+    text = event.postback.params['date']
 
     x = -10
     y = -10
