@@ -85,8 +85,8 @@ def get_image(event):
                     label='選択',
                     data='action=buy&itemid=1',
                     mode='date',
-                    initial=datetime.date.today(),
-                    max=datetime.date.today()
+                    initial=str(datetime.date.today()),
+                    max=str(datetime.date.today())
                 )
             ]
         )
