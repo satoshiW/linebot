@@ -154,17 +154,17 @@ def date_the_image(src: str, desc: str, event) -> None:
     im = Image.open(src)
     draw = ImageDraw.Draw(im)
     font = ImageFont.truetype("./fonts/Helvetica.ttc", 60)
-    text = event.postback.params['date']
+    text = event.postback.params['date'].strftime("%Y/%m/%d")
 
-    x = 10
-    y = 10
+    x = -10
+    y = -10
     margin = 5
     text_width = draw.textsize(text, font=font)[0] + margin
     text_height = draw.textsize(text, font=font)[1] + margin
     draw.rectangle(
-            (x - margin, y - margin, x + text_width, y + text_height), fill=(255, 255, 255)
+            (x - margin, y - margin, x + text_width, y + text_height), fill=(0, 0, 0)
         )
-    draw.text((x, y), text, fill=(0, 0, 0), font=font)
+    draw.text((x, y), text, fill=(255, 255, 255), font=font)
         
     im.save(desc)
 
