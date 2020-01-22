@@ -25,7 +25,7 @@ SRC_IMAGE_PATH = "static/images/{}.jpg"
 MAIN_IMAGE_PATH = "static/images/{}_main.jpg"
 PREVIEW_IMAGE_PATH = "static/images/{}_preview.jpg"
 
-#message_idを格納する為の空のリスト
+#message_idを格納する空のリスト
 image_list = []
 
 @app.route("/callback", methods=['POST'])
@@ -156,7 +156,7 @@ def date_the_image(src: str, desc: str, event) -> None:
     font = ImageFont.truetype("./fonts/Helvetica.ttc", 40)
     text = event.postback.params['date']
 
-    margin = 5
+    margin = 10
     text_width = draw.textsize(text, font=font)[0] + margin
     text_height = draw.textsize(text, font=font)[1] + margin
     x = im.width - text_width
@@ -164,7 +164,7 @@ def date_the_image(src: str, desc: str, event) -> None:
     draw.rectangle(
             (x - margin, y - margin, im.width - margin, im.height - margin), fill=(0, 0, 0)
         )
-    draw.text((x, y), text, fill=(255, 255, 255), font=font)
+    draw.text((x - margin, y - margin), text, fill=(255, 255, 255), font=font)
         
     im.save(desc)
 
