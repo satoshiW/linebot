@@ -164,7 +164,7 @@ def date_the_image(src: str, desc: str, event) -> None:
     draw.rectangle(
             (im.width - text_width, im.height - text_height, im.width - margin, im.height - margin), fill=(0, 0, 0)
         )
-    draw.text((x, y), text, fill=(255, 255, 255), font=font)
+    draw.text((im.width - text_width, im.height - text_height), text, fill=(255, 255, 255), font=font)
         
     im.save(desc)
 
