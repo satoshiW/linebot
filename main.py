@@ -153,16 +153,16 @@ def save_image(message_id: str, save_path: str) -> None:
 def date_the_image(src: str, desc: str, event) -> None:
     im = Image.open(src)
     draw = ImageDraw.Draw(im)
-    font = ImageFont.truetype("./fonts/Helvetica.ttc", 60)
+    font = ImageFont.truetype("./fonts/Helvetica.ttc", 40)
     text = event.postback.params['date']
 
-    x = -10
-    y = -10
+    x = 10
+    y = 10
     margin = 5
     text_width = draw.textsize(text, font=font)[0] + margin
     text_height = draw.textsize(text, font=font)[1] + margin
     draw.rectangle(
-            (x - margin, y - margin, x + text_width, y + text_height), fill=(0, 0, 0)
+            (im.width - text_width, im.height - text_height, im.width - margin, im.height - margin), fill=(0, 0, 0)
         )
     draw.text((x, y), text, fill=(255, 255, 255), font=font)
         
