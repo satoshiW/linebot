@@ -162,9 +162,9 @@ def date_the_image(src: str, desc: str, event) -> None:
     x = im.width - text_width
     y = im.height - text_height
     draw.rectangle(
-            (x - margin * 7, y - margin * 3, im.width, im.height - margin), fill=(0, 0, 0, 127)
-        )
-    draw.text((x - margin * 4, y - margin * 2), text, fill=(255, 255, 255), font=font)
+            (x - margin * 6, y - margin * 3, im.width, im.height - margin), fill=(0, 0, 0, 127)
+        ).convert("RGBA")
+    draw.text((x - margin * 3, y - margin * 2), text, fill=(255, 255, 255), font=font)
         
     im.save(desc)
 
