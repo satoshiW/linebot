@@ -157,8 +157,8 @@ def date_the_image(src: str, desc: str, event) -> None:
     text = event.postback.params['date']
 
     margin = 10
-    text_width = draw.textsize(text, font=font)[0] + margin
-    text_height = draw.textsize(text, font=font)[1] + margin
+    text_width = draw.textsize(text, font=font)[0]
+    text_height = draw.textsize(text, font=font)[1]
     x = im.width - text_width
     y = im.height - text_height
     draw.rectangle(
