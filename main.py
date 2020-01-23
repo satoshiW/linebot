@@ -151,24 +151,25 @@ def save_image(message_id: str, save_path: str) -> None:
     )"""
 
 def date_the_image(src: str, desc: str, event) -> None:
-    base = Image.open(src)
-    rect = Image.new("RGBA")
-    draw = ImageDraw.Draw(rect)
+    im = Image.open(src)
+    draw = ImageDraw.Draw(im)
     font = ImageFont.truetype("./fonts/Helvetica.ttc", 50)
     text = event.postback.params['date']
-
     margin = 10
     text_width = draw.textsize(text, font=font)[0]
     text_height = draw.textsize(text, font=font)[1]
     x = im.width - text_width
     y = im.height - text_height
+    
     draw.rectangle(
-            (x - margin * 6, y - margin * 3, im.width, im.height - margin), fill=(0, 0, 0, 128)
+            (x - margin * 6, y - margin * 3, im.width, im.height - margin), fill=(0, 0, 0)
         )
-    base = Image.alpha_composite(base, rect)
     draw.text((x - margin * 3, y - margin * 2), text, fill=(255, 255, 255), font=font)
+    
+    mask = Image.new("MASK", rectangle.size, 128)
+    Image.composit(rectangle, mask)
         
-    base.save(desc)
+    im.save(desc)
 
 if __name__ == "__main__":
 #    app.run()
