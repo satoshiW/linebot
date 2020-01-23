@@ -155,20 +155,24 @@ def date_the_image(src: str, desc: str, event) -> None:
     draw = ImageDraw.Draw(im)
     font = ImageFont.truetype("./fonts/Helvetica.ttc", 50)
     text = event.postback.params['date']
-    margin = 10
     text_width = draw.textsize(text, font=font)[0]
     text_height = draw.textsize(text, font=font)[1]
+    
+    margin = 10
     x = im.width - text_width
     y = im.height - text_height
+    box_size = (text_width + margon * 6) * (text_height + margon * 2)
+    rect = Image.new("RECT", box_size, (0, 0, 0, 128))
+    mask = Image.new("MASK", box_size, 128)
     
+    im.paste(rect, (x - margin * 6, y - margin * 3))
+    Image.composit(rect, mask)
+    """
     draw.rectangle(
             (x - margin * 6, y - margin * 3, im.width, im.height - margin), fill=(0, 0, 0)
-        )
+        )"""
     draw.text((x - margin * 3, y - margin * 2), text, fill=(255, 255, 255), font=font)
     
-    mask = Image.new("MASK", rectangle.size, 128)
-    Image.composit(rectangle, mask)
-        
     im.save(desc)
 
 if __name__ == "__main__":
