@@ -5,7 +5,7 @@ from linebot.models import (PostbackEvent, TemplateSendMessage, ButtonsTemplate,
 
 from pathlib import Path
 #from PIL.ExifTags import TAGS
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import datetime
 import os
 #import boto3
@@ -162,10 +162,10 @@ def date_the_image(src: str, desc: str, event) -> None:
     x = im.width - text_width
     y = im.height - text_height
     box_size = ((text_width + margin * 6), (text_height + margin * 2))
-    rect = Image.new("RGB", box_size, (0, 0, 0))
-    mask = Image.new("L", box_size, 0)
-    rect_m = Image.blend(mask, rect, 0.5)
-    im.paste(rect_m, (x - margin * 6, y - margin * 3))
+    rect = Image.new("RGBA", box_size, (0, 0, 0, 128))
+    #mask = Image.new("L", box_size, 0)
+    #rect_m = Image.blend(mask, rect, 0.5)
+    im.paste(rect, (x - margin * 6, y - margin * 3))
     """
     draw.rectangle(
             (x - margin * 6, y - margin * 3, im.width, im.height - margin), fill=(0, 0, 0)
