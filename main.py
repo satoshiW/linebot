@@ -161,8 +161,8 @@ def date_the_image(src: str, desc: str, event) -> None:
     margin = 10
     x = im.width - text_width
     y = im.height - text_height
-    box_size = (text_width + margin * 6) * (text_height + margin * 2)
-    rect = Image.new("RECT", box_size, (0, 0, 0, 128))
+    box_size = ((text_width + margin * 6), (text_height + margin * 2))
+    rect = Image.new("RECT", box_size, (0, 0, 0))
     mask = Image.new("MASK", box_size, 128)
     
     im.paste(rect, (x - margin * 6, y - margin * 3))
