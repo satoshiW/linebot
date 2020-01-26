@@ -166,7 +166,7 @@ def date_the_image(src: str, desc: str, event) -> None:
     mask = Image.new("L", box_size, 128)
     
     im.paste(rect, (x - margin * 6, y - margin * 3))
-    Image.composit(rect, mask)
+    Image.composit(im, rect, mask)
     """
     draw.rectangle(
             (x - margin * 6, y - margin * 3, im.width, im.height - margin), fill=(0, 0, 0)
