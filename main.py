@@ -162,11 +162,11 @@ def date_the_image(src: str, desc: str, event) -> None:
     x = im.width - text_width
     y = im.height - text_height
     box_size = ((text_width + margin * 6), (text_height + margin * 2))
-    rect = Image.new("RGBA", box_size, (0, 0, 0, 128))
-    #mask = Image.new("MASK", box_size, 128)
+    rect = Image.new("RGBA", box_size, (0, 0, 0))
+    mask = Image.new("L", box_size, 128)
     
     im.paste(rect, (x - margin * 6, y - margin * 3))
-    #Image.composit(rect, mask)
+    Image.composit(rect, mask)
     """
     draw.rectangle(
             (x - margin * 6, y - margin * 3, im.width, im.height - margin), fill=(0, 0, 0)
