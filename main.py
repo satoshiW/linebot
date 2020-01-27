@@ -79,7 +79,7 @@ def get_image(event):
         alt_text='撮影日を選択してね',
         template=ButtonsTemplate(
             text='撮影日を選択してね',
-            title='YYYY-MM-dd',
+            thumbnail_image_url=src_image_path,
             actions=[
                 DatetimePickerTemplateAction(
                     label='選択',
@@ -164,14 +164,8 @@ def date_the_image(src: str, desc: str, event) -> None:
     box_size = ((text_width + margin * 6), (text_height + margin * 2))
     rect = Image.new("RGB", box_size, (0, 0, 0))
     mask = Image.new("L", box_size, 128)
-    mask_blur = mask.filter(ImageFilter.GaussianBlur(10))
-    #rect_m = Image.blend(mask, rect, 0.5)
-    im.paste(rect, (x - margin * 6, y - margin * 3), mask_blur)
-    #Image.composite(im, rect, mask)
-    """
-    draw.rectangle(
-            (x - margin * 6, y - margin * 3, im.width, im.height - margin), fill=(0, 0, 0)
-        )"""
+    
+    im.paste(rect, (x - margin * 6, y - margin * 3), mask)
     draw.text((x - margin * 3, y - margin * 2), text, fill=(255, 255, 255), font=font)
     
     im.save(desc)
