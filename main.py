@@ -164,8 +164,9 @@ def date_the_image(src: str, desc: str, event) -> None:
     box_size = ((text_width + margin * 6), (text_height + margin * 2))
     rect = Image.new("RGB", box_size, (0, 0, 0))
     mask = Image.new("L", box_size, 128)
+    mask_blur = mask.filter(ImageFilter.GaussianBlur(10))
     #rect_m = Image.blend(mask, rect, 0.5)
-    im.paste(rect, (x - margin * 6, y - margin * 3), mask)
+    im.paste(rect, (x - margin * 6, y - margin * 3), mask_blur)
     #Image.composite(im, rect, mask)
     """
     draw.rectangle(
