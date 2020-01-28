@@ -27,6 +27,11 @@ PREVIEW_IMAGE_PATH = "static/images/{}_preview.jpg"
 
 #message_idを格納する空のリスト
 image_list = []
+image_id = image_list[-1]
+    
+src_image_path = Path(SRC_IMAGE_PATH.format(image_id)).absolute()
+main_image_path = MAIN_IMAGE_PATH.format(image_id)
+preview_image_path = PREVIEW_IMAGE_PATH.format(image_id)
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -55,9 +60,8 @@ def handle_message(event):
 def get_image(event):
     message_id = event.message.id
     image_list.append(message_id)
-    image_id = image_list[-1]
 
-    src_image_path = Path(SRC_IMAGE_PATH.format(image_id)).absolute()
+    #src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
     
     """
     try:
@@ -101,12 +105,12 @@ def get_image(event):
 
 @handler.add(PostbackEvent)
 def handle_postback(event):
-    image_id = image_list[-1]
+    """image_id = image_list[-1]
     
     src_image_path = Path(SRC_IMAGE_PATH.format(image_id)).absolute()
     main_image_path = MAIN_IMAGE_PATH.format(image_id)
     preview_image_path = PREVIEW_IMAGE_PATH.format(image_id)
-    
+    """
     date_the_image(src_image_path, Path(main_image_path).absolute(), event)
     date_the_image(src_image_path, Path(preview_image_path).absolute(), event)
     
