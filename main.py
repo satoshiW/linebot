@@ -81,7 +81,7 @@ def get_image(event):
         alt_text='撮影日を選択してね',
         template=ButtonsTemplate(
             text='撮影日を選択してね',
-            thumbnail_image_url=src_image_path,
+            thumbnail_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}",
             actions=[
                 DatetimePickerTemplateAction(
                     label='選択',
