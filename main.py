@@ -74,6 +74,8 @@ def get_image(event):
     """
     # 画像をHerokuへ一時保存
     save_image(message_id, src_image_path)
+    im = Image.open(src_image_path)
+    im.save(src_image_path)
     
     date_picker = TemplateSendMessage(
         alt_text='撮影日を選択してね',
