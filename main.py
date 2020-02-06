@@ -4,11 +4,9 @@ from linebot.exceptions import InvalidSignatureError
 from linebot.models import (PostbackEvent, TemplateSendMessage, ButtonsTemplate, DatetimePickerTemplateAction, ImageMessage, ImageSendMessage, MessageEvent, TextMessage, TextSendMessage)
 
 from pathlib import Path
-#from PIL.ExifTags import TAGS
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import datetime
 import os
-#import boto3
 
 app = Flask(__name__)
 app.debug = False
@@ -16,33 +14,25 @@ app.debug = False
 #環境変数取得
 YOUR_CHANNEL_ACCESS_TOKEN = os.environ["YOUR_CHANNEL_ACCESS_TOKEN"]
 YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
-#aws_s3_bucket = os.environ["AWS_STORAGE_BUCKET_NAME"]
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 
+#画像の参照元パス
 SRC_IMAGE_PATH = "static/images/{}.jpg"
 MAIN_IMAGE_PATH = "static/images/{}_main.jpg"
 PREVIEW_IMAGE_PATH = "static/images/{}_preview.jpg"
 
-#message_idを格納する空のリスト
-image_list = []
-image_id = image_list[-1]
-    
-src_image_path = Path(SRC_IMAGE_PATH.format(image_id)).absolute()
-main_image_path = MAIN_IMAGE_PATH.format(image_id)
-preview_image_path = PREVIEW_IMAGE_PATH.format(image_id)
+#message_idを格納する為のリスト
+message_list = []
 
 @app.route("/callback", methods=['POST'])
 def callback():
-    # get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
 
-    # get request body as text
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
 
-    # handle webhook body
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
@@ -50,37 +40,32 @@ def callback():
 
     return 'OK'
 
+#テキストのオウム返し
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=event.message.text))
 
+#画像の受け取り
 @handler.add(MessageEvent, message=ImageMessage)
 def get_image(event):
+    #message_idを取得
     message_id = event.message.id
-    image_list.append(message_id)
-
-    #src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
+    #message_idをリストに格納
+    message_list.append(message_id)
     
-    """
-    try:
-    	exif = Image.open(src_image_path)._getexif()
-    except AttributeError:
-    	return {}
-    	
-    exif_table = {}
-    for tag_id, value in exif.items():
-    	tag = TAGS.get(tag_id, tag_id)
-    	exif_table[tag] = value
+    #ファイル名をmessage_idに変換したパス
+    src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
 
-    return exif_table.get("DateTimeOriginal")
-    """
     # 画像をHerokuへ一時保存
     save_image(message_id, src_image_path)
+    
+    #日時選択時に表示する為に画像として保存
     im = Image.open(src_image_path)
     im.save(src_image_path)
     
+    #日時選択アクション
     date_picker = TemplateSendMessage(
         alt_text='撮影日を選択してね',
         template=ButtonsTemplate(
@@ -103,37 +88,33 @@ def get_image(event):
         date_picker
     )
 
+#画像を処理して送信
 @handler.add(PostbackEvent)
 def handle_postback(event):
-    """image_id = image_list[-1]
+    #最新のmessage_idをリストから取得
+    message_id = message_list[-1]
     
-    src_image_path = Path(SRC_IMAGE_PATH.format(image_id)).absolute()
-    main_image_path = MAIN_IMAGE_PATH.format(image_id)
-    preview_image_path = PREVIEW_IMAGE_PATH.format(image_id)
-    """
+    #ファイル名をmessage_idに変換したパス
+    src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
+    main_image_path = MAIN_IMAGE_PATH.format(message_id)
+    preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
+    
+    #画像処理
     date_the_image(src_image_path, Path(main_image_path).absolute(), event)
     date_the_image(src_image_path, Path(preview_image_path).absolute(), event)
-    
-    """
-    image_message = ImageSendMessage(
-        original_content_url = f"s3_image_url",
-        preview_image_url = f"s3_image_url"
-    )"""
 
     # 画像の送信
     image_message = ImageSendMessage(
             original_content_url=f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}",
             preview_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{preview_image_path}"
     )
-
+    
+    #ログの取得
     app.logger.info(f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}")
     
-    #app.logger.info(f"s3_image_url")
     line_bot_api.reply_message(event.reply_token, image_message)
 
-    # 画像を削除
-    #src_image_path.unlink()
-
+#画像保存関数
 def save_image(message_id: str, save_path: str) -> None:
     # message_idから画像のバイナリデータを取得
     message_content = line_bot_api.get_message_content(message_id)
@@ -142,41 +123,34 @@ def save_image(message_id: str, save_path: str) -> None:
         for chunk in message_content.iter_content():
             f.write(chunk)
 
-    """
-    file_name = message_id + ".jpg"
-    
-    s3_resource = boto3.resource("s3")
-    s3_resource.Bucket(aws_s3_bucket).upload_file("static/images/" + file_name, file_name)
-    
-    s3_client = boto3.client("s3")
-    s3_image_url = s3_client.generate_presigned_url(
-           ClientMethod = "get_object",
-           Params = {"Bucket": aws_s3_bucket, "Key": file_name},
-           ExpiresIn = 100,
-           HttpMethod = "GET"
-    )"""
-
+#画像処理関数
 def date_the_image(src: str, desc: str, event) -> None:
     im = Image.open(src)
     draw = ImageDraw.Draw(im)
     font = ImageFont.truetype("./fonts/Helvetica.ttc", 50)
+    #日時選択アクションの日付を取得
     text = event.postback.params['date']
+    #テキストのサイズ
     text_width = draw.textsize(text, font=font)[0]
     text_height = draw.textsize(text, font=font)[1]
     
     margin = 10
     x = im.width - text_width
     y = im.height - text_height
-    box_size = ((text_width + margin * 6), (text_height + margin * 2))
-    rect = Image.new("RGB", box_size, (0, 0, 0))
-    mask = Image.new("L", box_size, 128)
+    #描画する矩形のサイズ
+    rect_size = ((text_width + margin * 6), (text_height + margin * 2))
+    #矩形の描画
+    rect = Image.new("RGB", rect_size, (0, 0, 0))
+    #矩形を透明にする為のマスク
+    mask = Image.new("L", rect_size, 128)
     
+    #画像に矩形とマスクを貼り付け
     im.paste(rect, (x - margin * 6, y - margin * 3), mask)
+    #テキストの書き込み
     draw.text((x - margin * 3, y - margin * 2), text, fill=(255, 255, 255), font=font)
-    
     im.save(desc)
 
 if __name__ == "__main__":
-#    app.run()
+    #app.run()
     port = int(os.getenv("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
