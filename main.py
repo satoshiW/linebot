@@ -149,7 +149,7 @@ def date_the_image(src: str, desc: str, event) -> None:
     #画像に矩形とマスクを貼り付け
     im.paste(rect, (x - margin * 6, y - margin * 3), mask)
     #テキストの書き込み
-    draw.text_mod((x - margin * 3, y - margin * 2), text, fill=(255, 255, 255), font=font)
+    draw.text((x - margin * 3, y - margin * 2), text_mod, fill=(255, 255, 255), font=font)
     im.save(desc)
 
 if __name__ == "__main__":
