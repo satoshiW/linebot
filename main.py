@@ -7,6 +7,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import datetime
 import os
+import re
 
 app = Flask(__name__)
 app.debug = False
@@ -130,9 +131,10 @@ def date_the_image(src: str, desc: str, event) -> None:
     font = ImageFont.truetype("./fonts/Helvetica.ttc", 50)
     #日時選択アクションの日付を取得
     text = event.postback.params['date']
+    text_mod = re.sub("-", "/", text)
     #テキストのサイズ
-    text_width = draw.textsize(text, font=font)[0]
-    text_height = draw.textsize(text, font=font)[1]
+    text_width = draw.textsize(text_mod, font=font)[0]
+    text_height = draw.textsize(text_mod, font=font)[1]
     
     margin = 10
     x = im.width - text_width
@@ -147,7 +149,7 @@ def date_the_image(src: str, desc: str, event) -> None:
     #画像に矩形とマスクを貼り付け
     im.paste(rect, (x - margin * 6, y - margin * 3), mask)
     #テキストの書き込み
-    draw.text((x - margin * 3, y - margin * 2), text, fill=(255, 255, 255), font=font)
+    draw.text_mod((x - margin * 3, y - margin * 2), text, fill=(255, 255, 255), font=font)
     im.save(desc)
 
 if __name__ == "__main__":
