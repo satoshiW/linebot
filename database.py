@@ -16,7 +16,7 @@ def get_data(event, user_id):
 	if cursor == 0:
 		#user_idを追加
 		cursor.execute("INSERT INTO user VALUES user_id")
-		update_data
+		update_data()
 	#1人登録の場合
 	elif cursor == 1:
 		cursor.execute("SELECT * FROM user WHERE user_id=user_id")
@@ -26,7 +26,7 @@ def get_data(event, user_id):
             MessageAction(label=name_1, text=name_1),
             MessageAction(label="その他", text="その他")
         ])
-        get_day
+        get_day()
     #2人登録の場合
     elif cursor == 2:
     	cursor.execute("SELECT * FROM user WHERE user_id=user_id")
@@ -38,7 +38,7 @@ def get_data(event, user_id):
             MessageAction(label=name_2, text=name_2),
             MessageAction(label="その他", text="その他")
         ])
-        get_day
+        get_day()
     #３人登録の場合
     else:
     	cursor.execute("SELECT * FROM user WHERE user_id=user_id")
@@ -70,7 +70,7 @@ def get_data(event, user_id):
         	corsor.execute("SELECT day FROM user WHERE user_id=user_id and name=text_name")
         	birthday = cursor["day"]
 
-def update_data:
+def update_data():
 	#名前の確認
 	line_bot_api.reply_message(
         event.reply_token,
@@ -86,11 +86,11 @@ def update_data:
     #生年月日をdayに代入
     birthday = event.message.text
     #dayを更新
-	cursor.execute("UPDATE user SET day=birthday WHERE user_id=user_id")		
+	cursor.execute("UPDATE user SET day=birthday WHERE user_id=user_id")
 
-def get_day:
+def get_day():
 	if event.message.text == "その他":
-        update_data
+        update_data()
     else:
     	text_name = event.message.text
         corsor.execute("SELECT day FROM user WHERE user_id=user_id and name=text_name")
