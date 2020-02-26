@@ -1,13 +1,15 @@
 from flask import Flask, request, abort
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import (PostbackEvent, TemplateSendMessage, ButtonsTemplate, DatetimePickerTemplateAction, ImageMessage, ImageSendMessage, MessageEvent, TextMessage, TextSendMessage)
+from linebot.models import (FollowEvent, PostbackEvent, TemplateSendMessage, ButtonsTemplate, DatetimePickerTemplateAction, ImageMessage, ImageSendMessage, MessageEvent, TextMessage, TextSendMessage)
 
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import datetime
 import os
 import re
+
+import database
 
 app = Flask(__name__)
 app.debug = False
@@ -26,6 +28,7 @@ PREVIEW_IMAGE_PATH = "static/images/{}_preview.jpg"
 
 #message_idを格納する為のリスト
 message_list = []
+user_dict = {}
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -41,18 +44,21 @@ def callback():
 
     return 'OK'
 
-#テキストのオウム返し
-@handler.add(MessageEvent, message=TextMessage)
-def handle_message(event):
+#フォローイベント
+@handler.add(FollowEvent)
+def handle_follow(event):
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=event.message.text))
+        TextSendMessage(text=
+        "友達登録ありがとう。画像を送信して撮影日を教えてくれたら、その日付を画像に書き込むよ"))
 
 #画像の受け取り
 @handler.add(MessageEvent, message=ImageMessage)
-def get_image(event):
+def handle_image(event):
     #message_idを取得
     message_id = event.message.id
+    #user_idを取得
+    user_id = event.souce.user_id
     #message_idをリストに格納
     message_list.append(message_id)
     
@@ -65,8 +71,20 @@ def get_image(event):
     #日時選択時に表示する為に画像として保存
     im = Image.open(src_image_path)
     im.save(src_image_path)
+
+@handler.add(MessageEvent, message=TextMessage)
+def handle_text(event):
+    #最新のmessage_idをリストから取得
+    message_id = message_list[-1]
+    #user_idを取得
+    user_id = event.souce.user_id
+    #ファイル名をmessage_idに変換したパス
+    src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
     
-    #日時選択アクション
+    database(event, user_id)
+    user_dict[text_name] = birthday
+    
+    #撮影日の選択
     date_picker = TemplateSendMessage(
         alt_text='撮影日を選択してね',
         template=ButtonsTemplate(
@@ -130,7 +148,8 @@ def date_the_image(src: str, desc: str, event) -> None:
     draw = ImageDraw.Draw(im)
     font = ImageFont.truetype("./fonts/Helvetica.ttc", 50)
     #日時選択アクションの日付を取得
-    text = event.postback.params['date']
+    text = event.postback.params['date'] + user_dict
+    #正規表現での文字列置換
     text_mod = re.sub("-", "/", text)
     #テキストのサイズ
     text_width = draw.textsize(text_mod, font=font)[0]
