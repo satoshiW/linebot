@@ -9,7 +9,7 @@ import datetime
 import os
 import re
 
-import database
+import MySQLdb
 
 app = Flask(__name__)
 app.debug = False
@@ -80,10 +80,10 @@ def handle_text(event):
     user_id = event.souce.user_id
     #ファイル名をmessage_idに変換したパス
     src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
-    
+    """
     database(event, user_id)
     user_dict[text_name] = birthday
-    
+    """
     #撮影日の選択
     date_picker = TemplateSendMessage(
         alt_text='撮影日を選択してね',
