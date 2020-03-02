@@ -58,7 +58,7 @@ def handle_image(event):
     #message_idを取得
     message_id = event.message.id
     #user_idを取得
-    user_id = event.souce.user_id
+    user_id = event.source.user_id
     #message_idをリストに格納
     message_list.append(message_id)
     
@@ -77,7 +77,7 @@ def handle_text(event):
     #最新のmessage_idをリストから取得
     message_id = message_list[-1]
     #user_idを取得
-    user_id = event.souce.user_id
+    user_id = event.source.user_id
     #ファイル名をmessage_idに変換したパス
     src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
     
