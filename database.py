@@ -1,10 +1,10 @@
 import MySQLdb
 
 connection = MySQLdb.connect(
-		host="127.0.0.1",
-		user="root",
-		passwd="0ne0kr0ck",
-		db="piccaso_db",
+		host="us-cdbr-iron-east-04.cleardb.net",
+		user="ba35bf40e5c8e5",
+		passwd="05a70afa",
+		db="heroku_aa2b206541cbf4a",
 		charset="utf8"
 )
 cursor = connection.cursor(MySQLdb.cursors.DictCursor)
