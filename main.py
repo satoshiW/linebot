@@ -71,6 +71,8 @@ def handle_image(event):
     #日時選択時に表示する為に画像として保存
     im = Image.open(src_image_path)
     im.save(src_image_path)
+    
+    database(event, user_id)
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text(event):
@@ -81,7 +83,6 @@ def handle_text(event):
     #ファイル名をmessage_idに変換したパス
     src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
     
-    database(event, user_id)
     user_dict[text_name] = birthday
     
     #撮影日の選択
