@@ -72,7 +72,7 @@ def handle_image(event):
     im = Image.open(src_image_path)
     im.save(src_image_path)
     
-    database(event, user_id)
+    database.get_data(event, user_id)
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text(event):
