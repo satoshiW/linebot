@@ -11,7 +11,7 @@ cursor = connection.cursor(MySQLdb.cursors.DictCursor)
 
 def get_data(event, user_id):
 	#user_idの参照
-	cursor.execute("""SELECT COUNT(user_id) FROM user WHERE user_id=user_id""")
+	cursor.execute("""SELECT COUNT(user_id=user_id OR NULL) FROM user""")
 	#user_idが無かった場合
 	if cursor == 0:
 		#user_idを追加
