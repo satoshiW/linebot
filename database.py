@@ -1,13 +1,13 @@
-import MySQLdb
+import mysql.connector
 
-connection = MySQLdb.connect(
+connection = mysql.connector.connect(
 		host="us-cdbr-iron-east-04.cleardb.net",
 		user="ba35bf40e5c8e5",
 		passwd="05a70afa",
 		db="heroku_aa2b206541cbf4a",
 		charset="utf8"
 )
-cursor = connection.cursor(MySQLdb.cursors.DictCursor)
+cursor = connection.cursor(mysql.connector.cursors.DictCursor)
 
 def get_data(event, user_id):
 	#user_idの参照
