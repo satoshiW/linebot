@@ -1,6 +1,6 @@
 import mysql.connector
 
-connection = mysql.connector.connect(
+connection = mysql.connector(pool_recycle=3600).connect(
 		host="us-cdbr-iron-east-04.cleardb.net",
 		user="ba35bf40e5c8e5",
 		passwd="05a70afa",
