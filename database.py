@@ -1,4 +1,4 @@
-from mysql.connector
+import mysql.connector
 
 connection = mysql.connector.connect(
 		host="us-cdbr-iron-east-04.cleardb.net",
