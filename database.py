@@ -1,6 +1,6 @@
-import mysql.connector
+from flask_sqlalchemy import SQLAlchemy
 
-connection = mysql.connector.connect(
+connection = SQLAlchemy.connect(
 		host="us-cdbr-iron-east-04.cleardb.net",
 		user="ba35bf40e5c8e5",
 		passwd="05a70afa",
