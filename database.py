@@ -1,6 +1,6 @@
-import MySQLdb
+import mysql.connector
 
-connection = MySQLdb.connect(
+connection = mysql.connector.connect(
 		host="us-cdbr-iron-east-04.cleardb.net",
 		user="ba35bf40e5c8e5",
 		passwd="05a70afa",
@@ -8,6 +8,7 @@ connection = MySQLdb.connect(
 		charset="utf8"
 )
 cursor = connection.cursor()
+connection.ping(reconnect=True)
 
 def get_data(event, user_id):
 	#user_idの参照
