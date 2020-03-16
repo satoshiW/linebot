@@ -8,7 +8,6 @@ connection = mysql.connector.connect(
 		charset="utf8"
 )
 cursor = connection.cursor()
-connection.ping(reconnect=True)
 
 def get_data(event, user_id):
 	#user_idの参照
@@ -97,5 +96,6 @@ def get_day():
 		corsor.execute("""SELECT day FROM user WHERE user_id=user_id and name=text_name""")
 		birthday = corsor["day"]
 
-connection.commit()
-connection.close()
+def close_db()
+	connection.commit()
+	connection.close()
