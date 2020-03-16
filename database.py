@@ -96,6 +96,6 @@ def get_day():
 		corsor.execute("""SELECT day FROM user WHERE user_id=user_id and name=text_name""")
 		birthday = corsor["day"]
 
-def close_db()
+def close_db():
 	connection.commit()
 	connection.close()
