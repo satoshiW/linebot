@@ -12,6 +12,7 @@ cursor = connection.cursor(buffered=True)
 def get_data(event, user_id):
 	#user_idの参照
 	cursor.execute(f"""SELECT COUNT(user_id) FROM user WHERE user_id={user_id}""")
+	print(cursor)
 	#user_idが無かった場合
 	if cursor == 0:
 		#user_idを追加
@@ -96,6 +97,6 @@ def get_day():
 		corsor.execute("""SELECT day FROM user WHERE user_id=user_id and name=text_name""")
 		birthday = corsor["day"]
 
-def close_db():
+def connection_close():
 	connection.commit()
 	connection.close()
