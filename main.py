@@ -58,7 +58,7 @@ def handle_image(event):
     #message_idを取得
     message_id = event.message.id
     #user_idを取得
-    user_id = str(event.source.user_id)
+    user_id = "'", event.source.user_id, "'"
     #message_idをリストに格納
     message_list.append(message_id)
     
