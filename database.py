@@ -11,7 +11,7 @@ cursor = connection.cursor()
 
 def get_data(event, user_id):
 	#user_idの参照
-	cursor.execute(f"""SELECT COUNT(user_id) FROM user WHERE user_id=str({user_id})""")
+	cursor.execute(f"""SELECT COUNT(user_id) FROM user WHERE user_id={user_id}""")
 	#user_idが無かった場合
 	if cursor == 0:
 		#user_idを追加
