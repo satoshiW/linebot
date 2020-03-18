@@ -7,7 +7,7 @@ connection = mysql.connector.connect(
 		db="heroku_aa2b206541cbf4a",
 		charset="utf8"
 )
-cursor = connection.cursor()
+cursor = connection.cursor(buffered=True)
 
 def get_data(event, user_id):
 	#user_idの参照
