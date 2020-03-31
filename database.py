@@ -1,10 +1,10 @@
 import mysql.connector
 
 connection = mysql.connector.connect(
-		host="us-cdbr-iron-east-04.cleardb.net",
-		user="ba35bf40e5c8e5",
-		passwd="05a70afa",
-		db="heroku_aa2b206541cbf4a",
+		host="us-cdbr-iron-east-01.cleardb.net",
+		user="bb79d7cbb0be5a",
+		passwd="9f89d58b",
+		db="heroku_f228393d1fefd",
 		charset="utf8"
 )
 cursor = connection.cursor(buffered=True)
