@@ -4,7 +4,7 @@ connection = mysql.connector.connect(
 		host="us-cdbr-iron-east-01.cleardb.net",
 		user="bb79d7cbb0be5a",
 		passwd="9f89d58b",
-		db="heroku_f228393d1fefd",
+		db="heroku_f228393d1fefd1",
 		charset="utf8"
 )
 cursor = connection.cursor(buffered=True)
