@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 
-engine = create_engine("postgres://vmmfszxyquhraz:dde9deee8b575db7a8f4214d70e99429a5bb1a73d018ce8665642754005ed4ed@ec2-52-86-73-86.compute-1.amazonaws.com:5432/d1l9tnctjr6utu")
+engine = create_engine("postgresql://vmmfszxyquhraz:dde9deee8b575db7a8f4214d70e99429a5bb1a73d018ce8665642754005ed4ed@ec2-52-86-73-86.compute-1.amazonaws.com:5432/d1l9tnctjr6utu")
 #app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
 """
 connection = mysql.connector.connect(
@@ -16,7 +16,7 @@ con = engine.connect()
 
 def get_data(event, user_id):
 	#user_idの参照
-	con.execute(f"""SELECT COUNT(user_id) FROM d1l9tnctjr6utu WHERE user_id={user_id}""")
+	con.execute(f"""SELECT COUNT(user_id) FROM user WHERE user_id={user_id}""")
 	#user_idが無かった場合
 	if cursor.fetchone() == 0:
 		#user_idを追加
