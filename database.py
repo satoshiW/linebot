@@ -16,11 +16,11 @@ con = engine.connect()
 
 def get_data(event, user_id):
 	#user_idの参照
-	con.execute(f"""SELECT COUNT(user_id) FROM user_list WHERE user_id={user_id}""")
+	engine.execute(f"""SELECT COUNT(user_id) FROM user_list WHERE user_id={user_id}""")
 	#user_idが無かった場合
-	if con.fetchone() == 0:
+	if engine.fetchone() == 0:
 		#user_idを追加
-		con.execute("""INSERT INTO user_list VALUES user_id""")
+		engine.execute("""INSERT INTO user_list VALUES user_id""")
 		update_data()
 	#1人登録の場合
 	elif con.fetchone() == 1:
