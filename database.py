@@ -16,7 +16,7 @@ con = engine.connect()
 
 def get_data(event, user_id):
 	#user_idの参照
-	con.execute(f"""SELECT COUNT(user_id) FROM user WHERE user_id={user_id}""")
+	con.execute(f"""SELECT COUNT(user_id) FROM user_list WHERE user_id={user_id}""")
 	#user_idが無かった場合
 	if cursor.fetchone() == 0:
 		#user_idを追加
