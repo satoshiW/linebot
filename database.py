@@ -18,14 +18,14 @@ def get_data(event, user_id):
 	#user_idの参照
 	con.execute(f"""SELECT COUNT(user_id) FROM user_list WHERE user_id={user_id}""")
 	#user_idが無かった場合
-	if cursor.fetchone() == 0:
+	if con.fetchone() == 0:
 		#user_idを追加
-		cursor.execute("""INSERT INTO user VALUES user_id""")
+		con.execute("""INSERT INTO user_list VALUES user_id""")
 		update_data()
 	#1人登録の場合
-	elif cursor == 1:
-		cursor.execute("""SELECT * FROM user WHERE user_id=user_id""")
-		name_1 = cursor.fetchone(cursor["name"])
+	elif con.fetchone() == 1:
+		con.execute("""SELECT * FROM user_list WHERE user_id=user_id""")
+		name_1 = con.fetchone(con["name"])
 		buttons_template = ButtonTemplate(
         text="誰が写ってる？", actions=[
 			MessageAction(label=name_1, text=name_1),
@@ -33,10 +33,10 @@ def get_data(event, user_id):
 		])
 		get_day()
 	#2人登録の場合
-	elif cursor == 2:
-		cursor.execute("""SELECT * FROM user WHERE user_id=user_id""")
-		name_1 = cursor.fetchone(cursor["name"])
-		name_2 = cursor.fetchone(cursor["name"])
+	elif con.fetchone() == 2:
+		con.execute("""SELECT * FROM user_list WHERE user_id=user_id""")
+		name_1 = con.fetchone(cursor["name"])
+		name_2 = con.fetchone(cursor["name"])
 		buttons_template = ButtonTemplate(
 		text="誰が写ってる？", actions=[
 			MessageAction(label=name_1, text=name_1),
@@ -46,10 +46,10 @@ def get_data(event, user_id):
 		get_day()
 	#３人登録の場合
 	else:
-		cursor.execute("""SELECT * FROM user WHERE user_id=user_id""")
-		name_1 = cursor.fetchone(cursor["name"])
-		name_2 = cursor.fetchone(cursor["name"])
-		name_3 = cursor.fetchone(cursor["name"])
+		con.execute("""SELECT * FROM user_list WHERE user_id=user_id""")
+		name_1 = con.fetchone(cursor["name"])
+		name_2 = con.fetchone(cursor["name"])
+		name_3 = con.fetchone(cursor["name"])
 		buttons_template = ButtonTemplate(
 		text="誰が写ってる？", actions=[
 			MessageAction(label=name_1, text=name_1),
@@ -72,8 +72,8 @@ def get_data(event, user_id):
 			birthday = event.message.text
 		else:
 			text_name = event.message.text
-			corsor.execute("""SELECT day FROM user WHERE user_id=user_id and name=text_name""")
-			birthday = cursor["day"]
+			con.execute("""SELECT day FROM user_list WHERE user_id=user_id and name=text_name""")
+			birthday = con["day"]
 
 def update_data():
 	#名前の確認
@@ -83,7 +83,7 @@ def update_data():
 	#名前をnameに代入
 	text_name = event.message.text
 	#nameを更新
-	cursor.execute("""UPDATE user SET name=text_name WHERE user_id=user_id""")
+	con.execute("""UPDATE user_list SET name=text_name WHERE user_id=user_id""")
 	#生年月日の確認
 	line_bot_api.reply_message(
 		event.reply_token,
@@ -91,16 +91,16 @@ def update_data():
 	#生年月日をdayに代入
 	birthday = event.message.text
 	#dayを更新
-	cursor.execute("""UPDATE user SET day=birthday WHERE user_id=user_id""")
+	con.execute("""UPDATE user_list SET day=birthday WHERE user_id=user_id""")
 
 def get_day():
 	if event.message.text == "その他":
 		update_data()
 	else:
 		text_name = event.message.text
-		corsor.execute("""SELECT day FROM user WHERE user_id=user_id and name=text_name""")
-		birthday = corsor["day"]
+		con.execute("""SELECT day FROM user_list WHERE user_id=user_id and name=text_name""")
+		birthday = con["day"]
 
-def connection_close():
-	connection.commit()
-	connection.close()
+def engine_close():
+	engine.commit()
+	engine.close()
