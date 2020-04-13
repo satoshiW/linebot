@@ -18,6 +18,7 @@ session = Session(bind=engine)
 def get_data(event, user_id):
 	#user_idの参照
 	res = session.query(User).filter(User.user_id==f'{user_id}').count()
+	print(res)
 	#user_idが無かった場合
 	if res == "0":
 		#user_idを追加
