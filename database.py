@@ -1,31 +1,32 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, Column, String, Date
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import Session
 
 engine = create_engine("postgresql://vmmfszxyquhraz:dde9deee8b575db7a8f4214d70e99429a5bb1a73d018ce8665642754005ed4ed@ec2-52-86-73-86.compute-1.amazonaws.com:5432/d1l9tnctjr6utu")
-#app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
-"""
-connection = mysql.connector.connect(
-		host="us-cdbr-iron-east-01.cleardb.net",
-		user="bb79d7cbb0be5a",
-		passwd="9f89d58b",
-		db="heroku_f228393d1fefd1",
-		charset="utf8"
-)"""
-#cursor = connection.cursor(buffered=True)
-con = engine.connect()
+Base = declarative_base()
+
+class User(Base):
+	__tablename__ = "user_list"
+	user_id = Column("user_id", String(50), primary_key=True)
+	name = Column("name", String(10))
+	day = Column("day", Date)
+
+Base.metadata.create_all(engine)
+session = Session(bind=engine)
 
 def get_data(event, user_id):
 	#user_idの参照
-	a = engine.execute(f"""SELECT COUNT(user_id) FROM user_list WHERE user_id={user_id}""")
-	print(a)
+	res = session.query(User).filter(User.user_id==f'{user_id}').count()
 	#user_idが無かった場合
-	if a.fetchone() == 0:
+	if res == "0":
 		#user_idを追加
-		engine.execute("""INSERT INTO user_list VALUES user_id""")
+		user1 = User(user_id=f"{user_id}")
+		session.add(user1)
 		update_data()
 	#1人登録の場合
-	elif con.fetchone() == 1:
-		con.execute("""SELECT * FROM user_list WHERE user_id=user_id""")
+	elif res == "1":
+		session.query(User).filter(User.user_id==f'{user_id}')
 		name_1 = con.fetchone(con["name"])
 		buttons_template = ButtonTemplate(
         text="誰が写ってる？", actions=[
