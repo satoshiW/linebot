@@ -90,8 +90,8 @@ def handle_image(event):
     im.save(src_image_path)
     
     users = session.query(User).filter(User.user_id==f'{user_id}').all()
-	for row in users:
-		name_list.append(row.name)
+    for row in users:
+        name_list.append(row.name)
 	#user_idの参照
 	#res = session.query(User).filter(User.user_id==f'{user_id}').count()
 	num = len(name_list)
