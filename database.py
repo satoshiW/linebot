@@ -29,7 +29,7 @@ def get_data(event, user_id, line_bot_api):
 		#user_idを追加
 		user1 = User(user_id=f"{user_id}")
 		session.add(user1)
-		update_data()
+		update_data(event, user_id, line_bot_api)
 	#1人登録の場合
 	elif lens == 1:
 		#users = session.query(User).filter(User.user_id==f'{user_id}').first()
@@ -103,7 +103,7 @@ def update_data(event, user_id, line_bot_api):
 
 def get_day():
 	if event.message.text == "その他":
-		update_data()
+		update_data(event, user_id, line_bot_api)
 	else:
 		text_name = event.message.text
 		res = session.query(User).filter(User.user_id==f'{user_id}', User.name==text_name).first()
