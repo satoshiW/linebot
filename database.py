@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, String, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
+from linebot.models import (TextSendMessage, TemplateSendMessage, ButtonsTemplate)
 
 engine = create_engine("postgresql://vmmfszxyquhraz:dde9deee8b575db7a8f4214d70e99429a5bb1a73d018ce8665642754005ed4ed@ec2-52-86-73-86.compute-1.amazonaws.com:5432/d1l9tnctjr6utu")
 Base = declarative_base()
@@ -16,6 +17,7 @@ Base.metadata.create_all(engine)
 session = Session(bind=engine)
 name_list = []
 
+@handler.add(MessageEvent, message=TextMessage)
 def get_data(event, user_id, line_bot_api):
 	users = session.query(User).filter(User.user_id==f'{user_id}').all()
 	for row in users:
