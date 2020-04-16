@@ -82,7 +82,7 @@ def handle_text(event):
     #ファイル名をmessage_idに変換したパス
     src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
     
-    user_dict[text_name] = birthday
+    #user_dict[text_name] = birthday
     
     #撮影日の選択
     date_picker = TemplateSendMessage(
