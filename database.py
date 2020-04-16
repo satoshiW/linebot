@@ -14,21 +14,26 @@ class User(Base):
 
 Base.metadata.create_all(engine)
 session = Session(bind=engine)
+name_list = []
 
 def get_data(event, user_id):
+	users = session.query(User).filter(User.user_id==f'{user_id}').all()
+	for row in users:
+		name_list.append(row.name)
 	#user_idの参照
-	res = session.query(User).filter(User.user_id==f'{user_id}').count()
-	print(res)
+	#res = session.query(User).filter(User.user_id==f'{user_id}').count()
+	lens = len(name_list)
+	
 	#user_idが無かった場合
-	if res == "0":
+	if lens == 0:
 		#user_idを追加
 		user1 = User(user_id=f"{user_id}")
 		session.add(user1)
 		update_data()
 	#1人登録の場合
-	elif res == "1":
-		session.query(User).filter(User.user_id==f'{user_id}')
-		name_1 = con.fetchone(con["name"])
+	elif lens == 1:
+		#users = session.query(User).filter(User.user_id==f'{user_id}').first()
+		name_1 = name_list[0]
 		buttons_template = ButtonTemplate(
         text="誰が写ってる？", actions=[
 			MessageAction(label=name_1, text=name_1),
@@ -36,10 +41,9 @@ def get_data(event, user_id):
 		])
 		get_day()
 	#2人登録の場合
-	elif con.fetchone() == 2:
-		con.execute("""SELECT * FROM user_list WHERE user_id=user_id""")
-		name_1 = con.fetchone(cursor["name"])
-		name_2 = con.fetchone(cursor["name"])
+	elif lens == 2:
+		name_1 = name_list[0]
+		name_2 = name_list[1]
 		buttons_template = ButtonTemplate(
 		text="誰が写ってる？", actions=[
 			MessageAction(label=name_1, text=name_1),
@@ -48,11 +52,10 @@ def get_data(event, user_id):
 		])
 		get_day()
 	#３人登録の場合
-	else:
-		con.execute("""SELECT * FROM user_list WHERE user_id=user_id""")
-		name_1 = con.fetchone(cursor["name"])
-		name_2 = con.fetchone(cursor["name"])
-		name_3 = con.fetchone(cursor["name"])
+	elif lens == 3:
+		name_1 = name_list[0]
+		name_2 = name_list[1]
+		name_3 = name_list[2]
 		buttons_template = ButtonTemplate(
 		text="誰が写ってる？", actions=[
 			MessageAction(label=name_1, text=name_1),
@@ -75,8 +78,8 @@ def get_data(event, user_id):
 			birthday = event.message.text
 		else:
 			text_name = event.message.text
-			con.execute("""SELECT day FROM user_list WHERE user_id=user_id and name=text_name""")
-			birthday = con["day"]
+			res = session.query(User).filter(User.user_id==f'{user_id}', User.name==text_name).first()
+			birthday = res
 
 def update_data():
 	#名前の確認
@@ -86,7 +89,8 @@ def update_data():
 	#名前をnameに代入
 	text_name = event.message.text
 	#nameを更新
-	con.execute("""UPDATE user_list SET name=text_name WHERE user_id=user_id""")
+	user_name = session.query(User).filter(User.user_id=f"user_id").first()
+	user_name.name = text_name
 	#生年月日の確認
 	line_bot_api.reply_message(
 		event.reply_token,
@@ -94,15 +98,16 @@ def update_data():
 	#生年月日をdayに代入
 	birthday = event.message.text
 	#dayを更新
-	con.execute("""UPDATE user_list SET day=birthday WHERE user_id=user_id""")
+	user_day = session.query(User).filter(User.user_id=f"user_id").first()
+	user_day.day = birthday
 
 def get_day():
 	if event.message.text == "その他":
 		update_data()
 	else:
 		text_name = event.message.text
-		con.execute("""SELECT day FROM user_list WHERE user_id=user_id and name=text_name""")
-		birthday = con["day"]
+		res = session.query(User).filter(User.user_id==f'{user_id}', User.name==text_name).first()
+		birthday = res
 
 def engine_close():
 	engine.commit()
