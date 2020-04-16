@@ -3,6 +3,9 @@ from sqlalchemy import create_engine, Column, String, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
 from linebot.models import (TextSendMessage, TemplateSendMessage, ButtonsTemplate)
+from linebot import WebhookHandler
+
+import os
 
 engine = create_engine("postgresql://vmmfszxyquhraz:dde9deee8b575db7a8f4214d70e99429a5bb1a73d018ce8665642754005ed4ed@ec2-52-86-73-86.compute-1.amazonaws.com:5432/d1l9tnctjr6utu")
 Base = declarative_base()
@@ -15,6 +18,10 @@ class User(Base):
 
 Base.metadata.create_all(engine)
 session = Session(bind=engine)
+
+YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
+handler = WebhookHandler(YOUR_CHANNEL_SECRET)
+
 name_list = []
 
 @handler.add(MessageEvent, message=TextMessage)
@@ -24,16 +31,16 @@ def get_data(event, user_id, line_bot_api):
 		name_list.append(row.name)
 	#user_idの参照
 	#res = session.query(User).filter(User.user_id==f'{user_id}').count()
-	lens = len(name_list)
+	num = len(name_list)
 	
 	#user_idが無かった場合
-	if lens == 0:
+	if num == 0:
 		#user_idを追加
 		user1 = User(user_id=f"{user_id}")
 		session.add(user1)
 		update_data(event, user_id, line_bot_api)
 	#1人登録の場合
-	elif lens == 1:
+	elif num == 1:
 		#users = session.query(User).filter(User.user_id==f'{user_id}').first()
 		name_1 = name_list[0]
 		buttons_template = ButtonTemplate(
@@ -43,7 +50,7 @@ def get_data(event, user_id, line_bot_api):
 		])
 		get_day()
 	#2人登録の場合
-	elif lens == 2:
+	elif num == 2:
 		name_1 = name_list[0]
 		name_2 = name_list[1]
 		buttons_template = ButtonTemplate(
@@ -54,7 +61,7 @@ def get_data(event, user_id, line_bot_api):
 		])
 		get_day()
 	#３人登録の場合
-	elif lens == 3:
+	elif num == 3:
 		name_1 = name_list[0]
 		name_2 = name_list[1]
 		name_3 = name_list[2]
