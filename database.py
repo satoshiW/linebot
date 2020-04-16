@@ -23,7 +23,6 @@ def get_data(event, user_id):
 	#user_idの参照
 	#res = session.query(User).filter(User.user_id==f'{user_id}').count()
 	lens = len(name_list)
-	print(name_list)
 	
 	#user_idが無かった場合
 	if lens == 0:
@@ -90,7 +89,7 @@ def update_data():
 	#名前をnameに代入
 	text_name = event.message.text
 	#nameを更新
-	user_name = session.query(User).filter(User.user_id=f"user_id").first()
+	user_name = session.query(User).filter(User.user_id==f"user_id").first()
 	user_name.name = text_name
 	#生年月日の確認
 	line_bot_api.reply_message(
