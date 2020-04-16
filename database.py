@@ -81,7 +81,7 @@ def get_data(event, user_id, line_bot_api):
 			res = session.query(User).filter(User.user_id==f'{user_id}', User.name==text_name).first()
 			birthday = res
 
-def update_data():
+def update_data(line_bot_api):
 	#名前の確認
 	line_bot_api.reply_message(
 		event.reply_token,
