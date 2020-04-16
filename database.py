@@ -98,7 +98,7 @@ def update_data():
 	#生年月日をdayに代入
 	birthday = event.message.text
 	#dayを更新
-	user_day = session.query(User).filter(User.user_id=f"user_id").first()
+	user_day = session.query(User).filter(User.user_id==f"user_id").first()
 	user_day.day = birthday
 
 def get_day():
