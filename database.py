@@ -16,7 +16,7 @@ Base.metadata.create_all(engine)
 session = Session(bind=engine)
 name_list = []
 
-def get_data(event, user_id):
+def get_data(event, user_id, line_bot_api):
 	users = session.query(User).filter(User.user_id==f'{user_id}').all()
 	for row in users:
 		name_list.append(row.name)
