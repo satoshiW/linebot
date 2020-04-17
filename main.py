@@ -112,24 +112,24 @@ def handle_text(event):
         #user_idを追加
         user1 = User(user_id=f"{user_id}")
         session.add(user1)
-    #名前の確認
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text="写真に写っている人の名前は？"))
-    #名前をnameに代入
-    text_name = event.message.text
-    #nameを更新
-    user_name = session.query(User).filter(User.user_id==f"user_id").first()
-    user_name.name = text_name
-    #生年月日の確認
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=text_name+"さんの生年月日を◯◯◯◯-◯◯-◯◯の形式で入力してね"))
-    #生年月日をdayに代入
-    birthday = event.message.text
-    #dayを更新
-    user_day = session.query(User).filter(User.user_id==f"user_id").first()
-    user_day.day = birthday
+        #名前の確認
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text="写真に写っている人の名前は？"))
+        #名前をnameに代入
+        text_name = event.message.text
+        #nameを更新
+        user_name = session.query(User).filter(User.user_id==f"user_id").first()
+        user_name.name = text_name
+        #生年月日の確認
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=text_name+"さんの生年月日を◯◯◯◯-◯◯-◯◯の形式で入力してね"))
+        #生年月日をdayに代入
+        birthday = event.message.text
+        #dayを更新
+        user_day = session.query(User).filter(User.user_id==f"user_id").first()
+        user_day.day = birthday
     #1人登録の場合
     elif num == 1:
         #users = session.query(User).filter(User.user_id==f'{user_id}').first()
