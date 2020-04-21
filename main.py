@@ -178,7 +178,7 @@ def handle_text(event):
     
     #登録数が3より少ない場合、dayを追加
     if num < 3:
-        user_day = session.query(User).filter(User.user_id==f"user_id", User.day=="null").first()
+        user_day = session.query(User).filter(User.user_id==f"{user_id}", User.day==None).first()
         user_day.day = birthday
     
     #撮影日の選択    
