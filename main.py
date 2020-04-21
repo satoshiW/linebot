@@ -48,8 +48,7 @@ PREVIEW_IMAGE_PATH = "static/images/{}_preview.jpg"
 #message_idを格納する為のリスト
 #message_list = []
 name_list = []
-day_dict = {}
-#user_dict = {}
+user_dict = {}
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -99,7 +98,7 @@ def handle_image(event):
     #一致した行のnameをリストへ挿入
     for row in names:
         name_list.append(row.name)
-        day_dict[row.name] = row.day
+        user_dict[row.name] = row.day
     #nameの数
     num = len(name_list)
     
@@ -144,11 +143,12 @@ def handle_image(event):
             #user_idを追加
             user1 = User(user_id=f"{user_id}")
             session.add(user1)
+            print(user_id)
     #名前がある場合、生年月日を取得する
     else:
         text_name = event.message.text
         #res = session.query(User.day).filter(User.user_id==f"{user_id}", User.name==f"{text_name}").first()
-        birthday = day_dict[text_name]
+        birthday = user_dict[text_name]
         #撮影日の選択            
         select_day()
 
