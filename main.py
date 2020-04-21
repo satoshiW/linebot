@@ -166,8 +166,7 @@ def handle_text(event):
     
     #登録数が3より少ない場合、nameを追加
     if num < 3:
-        user_name = session.query(User).filter(User.user_id==f"user_id", User.name==None).first()
-        print(f"user_id")
+        user_name = session.query(User).filter(User.user_id==f"{user_id}", User.name==None).first()
         user_name.name = text_name
         
     #生年月日の確認
