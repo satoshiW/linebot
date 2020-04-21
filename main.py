@@ -6,7 +6,9 @@ from sqlalchemy.orm import Session
 
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
-from linebot.models import (FollowEvent, PostbackEvent, TemplateSendMessage, ButtonsTemplate, DatetimePickerTemplateAction, ImageMessage, ImageSendMessage, MessageEvent, TextMessage, TextSendMessage)
+from linebot.models import (FollowEvent, PostbackEvent, TemplateSendMessage, \
+                                            ButtonsTemplate, DatetimePickerTemplateAction, ImageMessage, \
+                                            ImageSendMessage, MessageEvent, TextMessage, TextSendMessage)
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import datetime
@@ -25,7 +27,8 @@ YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
 
-engine = create_engine("postgresql://vmmfszxyquhraz:dde9deee8b575db7a8f4214d70e99429a5bb1a73d018ce8665642754005ed4ed@ec2-52-86-73-86.compute-1.amazonaws.com:5432/d1l9tnctjr6utu")
+engine = create_engine("postgresql://vmmfszxyquhraz:dde9deee8b575db7a8f4214d70e99429a5bb1\
+a73d018ce8665642754005ed4ed@ec2-52-86-73-86.compute-1.amazonaws.com:5432/d1l9tnctjr6utu")
 Base = declarative_base()
 
 class User(Base):
@@ -43,9 +46,10 @@ MAIN_IMAGE_PATH = "static/images/{}_main.jpg"
 PREVIEW_IMAGE_PATH = "static/images/{}_preview.jpg"
 
 #message_idを格納する為のリスト
-message_list = []
+#message_list = []
 name_list = []
-user_dict = {}
+day_dict = {}
+#user_dict = {}
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -72,12 +76,13 @@ def handle_follow(event):
 #画像の受け取り
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image(event):
+    global message_id, user_id, num
     #message_idを取得
     message_id = event.message.id
     #user_idを取得
-    user_id = "'" + str(event.source.user_id) + "'"
+    user_id = event.source.user_id
     #message_idをリストに格納
-    message_list.append(message_id)
+    #message_list.append(message_id)
     
     #ファイル名をmessage_idに変換したパス
     src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
@@ -89,57 +94,23 @@ def handle_image(event):
     im = Image.open(src_image_path)
     im.save(src_image_path)
     
-    users = session.query(User).filter(User.user_id==f'{user_id}').all()
-    for row in users:
+    #user_idが一致する行を検索
+    names = session.query(User.name, User.day).filter(User.user_id==f"{user_id}").all()
+    #一致した行のnameをリストへ挿入
+    for row in names:
         name_list.append(row.name)
-    #user_idの参照
-    #res = session.query(User).filter(User.user_id==f'{user_id}').count()
+        day_dict[row.name] = row.day
+    #nameの数
     num = len(name_list)
     
-    #database.get_data(event, user_id, line_bot_api)
-
-@handler.add(MessageEvent, message=TextMessage)
-def handle_text(event):
-    #最新のmessage_idをリストから取得
-    message_id = message_list[-1]
-    #user_idを取得
-    user_id = event.source.user_id
-    #ファイル名をmessage_idに変換したパス
-    src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
-    
-    #user_idが無かった場合
-    if num == 0:
-        #user_idを追加
-        user1 = User(user_id=f"{user_id}")
-        session.add(user1)
-        #名前の確認
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text="写真に写っている人の名前は？"))
-        #名前をnameに代入
-        text_name = event.message.text
-        #nameを更新
-        user_name = session.query(User).filter(User.user_id==f"user_id").first()
-        user_name.name = text_name
-        #生年月日の確認
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=text_name+"さんの生年月日を◯◯◯◯-◯◯-◯◯の形式で入力してね"))
-        #生年月日をdayに代入
-        birthday = event.message.text
-        #dayを更新
-        user_day = session.query(User).filter(User.user_id==f"user_id").first()
-        user_day.day = birthday
     #1人登録の場合
-    elif num == 1:
-        #users = session.query(User).filter(User.user_id==f'{user_id}').first()
+    if num == 1:
         name_1 = name_list[0]
         buttons_template = ButtonTemplate(
         text="誰が写ってる？", actions=[
             MessageAction(label=name_1, text=name_1),
             MessageAction(label="その他", text="その他")
         ])
-        get_day()
     #2人登録の場合
     elif num == 2:
         name_1 = name_list[0]
@@ -150,7 +121,6 @@ def handle_text(event):
             MessageAction(label=name_2, text=name_2),
             MessageAction(label="その他", text="その他")
         ])
-        get_day()
     #３人登録の場合
     elif num == 3:
         name_1 = name_list[0]
@@ -163,54 +133,62 @@ def handle_text(event):
             MessageAction(label=name_3, text=name_3),
             MessageAction(label="その他", text="その他")
         ])
-        if event.message.text == "その他":
-            #名前の確認
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text="写真に写っている人の名前は？"))
-            #名前をnameに代入
-            text_name = event.message.text
-            #生年月日の確認
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text=text_name+"さんの生年月日を◯◯◯◯-◯◯-◯◯の形式で入力してね"))
-            #生年月日をdayに代入
-            birthday = event.message.text
-        else:
-            text_name = event.message.text
-            res = session.query(User).filter(User.user_id==f'{user_id}', User.name==text_name).first()
-            birthday = res
     
-    #user_dict[text_name] = birthday
+    #登録がないか選択がその他の場合、名前を確認する
+    if num == 0 or event.message.text == "その他":
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text="写真に写っている人の名前は？"))
+        #登録数が3より少ない場合、user_idを追加
+        if num < 3:
+            #user_idを追加
+            user1 = User(user_id=f"{user_id}")
+            session.add(user1)
+    #名前がある場合、生年月日を取得する
+    else:
+        text_name = event.message.text
+        #res = session.query(User.day).filter(User.user_id==f"{user_id}", User.name==f"{text_name}").first()
+        birthday = day_dict[text_name]
+        #撮影日の選択            
+        select_day()
+
+@handler.add(MessageEvent, message=TextMessage)
+def handle_text(event):
+    #最新のmessage_idをリストから取得
+    #message_id = message_list[-1]
+    #user_idを取得
+    #user_id = event.source.user_id
+    #ファイル名をmessage_idに変換したパス
+    src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
+
+    #名前をtext_nameに代入
+    text_name = event.message.text
     
-    #撮影日の選択
-    date_picker = TemplateSendMessage(
-        alt_text='撮影日を選択してね',
-        template=ButtonsTemplate(
-            text='撮影日を選択してね',
-            thumbnail_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}",
-            actions=[
-                DatetimePickerTemplateAction(
-                    label='選択',
-                    data='action=buy&itemid=1',
-                    mode='date',
-                    initial=str(datetime.date.today()),
-                    max=str(datetime.date.today())
-                )
-            ]
-        )
-    )
-    
+    #登録数が3より少ない場合、nameを追加
+    if num < 3:
+        user_name = session.query(User).filter(User.user_id==f"user_id", User.name=="null").first()
+        user_name.name = text_name
+        
+    #生年月日の確認
     line_bot_api.reply_message(
         event.reply_token,
-        date_picker
-    )
+        TextSendMessage(text=text_name+"さんの生年月日を◯◯◯◯-◯◯-◯◯の形式で入力してね"))
+    #生年月日をbirthdayに代入
+    birthday = event.message.text
+    
+    #登録数が3より少ない場合、dayを追加
+    if num < 3:
+        user_day = session.query(User).filter(User.user_id==f"user_id", User.day=="null").first()
+        user_day.day = birthday
+    
+    #撮影日の選択    
+    select_day()
 
 #画像を処理して送信
 @handler.add(PostbackEvent)
 def handle_postback(event):
     #最新のmessage_idをリストから取得
-    message_id = message_list[-1]
+    #message_id = message_list[-1]
     
     #ファイル名をmessage_idに変換したパス
     src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
@@ -241,13 +219,29 @@ def save_image(message_id: str, save_path: str) -> None:
         for chunk in message_content.iter_content():
             f.write(chunk)
 
-def get_day():
-    if event.message.text == "その他":
-        update_data(event, user_id, line_bot_api)
-    else:
-        text_name = event.message.text
-        res = session.query(User).filter(User.user_id==f'{user_id}', User.name==text_name).first()
-        birthday = res
+#撮影日の選択関数
+def select_day():
+    date_picker = TemplateSendMessage(
+        alt_text='撮影日を選択してね',
+        template=ButtonsTemplate(
+            text='撮影日を選択してね',
+            thumbnail_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}",
+            actions=[
+                DatetimePickerTemplateAction(
+                    label='選択',
+                    data='action=buy&itemid=1',
+                    mode='date',
+                    initial=str(datetime.date.today()),
+                    max=str(datetime.date.today())
+                )
+            ]
+        )
+    )
+    
+    line_bot_api.reply_message(
+        event.reply_token,
+        date_picker
+    )
 
 #画像処理関数
 def date_the_image(src: str, desc: str, event) -> None:
