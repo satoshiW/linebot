@@ -143,7 +143,7 @@ def handle_image(event):
             #user_idを追加
             user1 = User(user_id=f"{user_id}")
             session.add(user1)
-            print(user_id)
+            session.commit()
     #名前がある場合、生年月日を取得する
     else:
         text_name = event.message.text
@@ -182,7 +182,7 @@ def handle_text(event):
         user_day.day = birthday
     
     #撮影日の選択    
-    select_day()
+    select_day(src_image_path)
 
 #画像を処理して送信
 @handler.add(PostbackEvent)
@@ -220,7 +220,7 @@ def save_image(message_id: str, save_path: str) -> None:
             f.write(chunk)
 
 #撮影日の選択関数
-def select_day():
+def select_day(src_image_path):
     date_picker = TemplateSendMessage(
         alt_text='撮影日を選択してね',
         template=ButtonsTemplate(
