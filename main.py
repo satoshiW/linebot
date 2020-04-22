@@ -172,14 +172,13 @@ def handle_text(event):
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=text_name+"さんの生年月日を◯◯◯◯-◯◯-◯◯の形式で入力してね"))
-    print("a")
     #生年月日をbirthdayに代入
     birthday = event.message.text
     
     #登録数が3より少ない場合、dayを追加
     if num < 3:
         user_day = session.query(User).filter(User.user_id==f"{user_id}", User.day==None).first()
-        user_day.day = birthday
+        #user_day.day = birthday
         
     #撮影日の選択    
     select_day(src_image_path, event)
