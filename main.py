@@ -167,7 +167,7 @@ def handle_text(event):
     if num < 3:
         user_name = session.query(User).filter(User.user_id==f"{user_id}", User.name==None).first()
         user_name.name = text_name
-    """    
+    
     #生年月日の確認
     line_bot_api.reply_message(
         event.reply_token,
@@ -179,7 +179,7 @@ def handle_text(event):
     if num < 3:
         user_day = session.query(User).filter(User.user_id==f"{user_id}", User.day==None).first()
         user_day.day = birthday
-    """
+        session.commit()
     #撮影日の選択    
     select_day(src_image_path, event)
 
