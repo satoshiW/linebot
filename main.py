@@ -105,7 +105,7 @@ def handle_image(event):
     #1人登録の場合
     if num == 1:
         name_1 = name_list[0]
-        buttons_template = ButtonTemplate(
+        buttons_template = ButtonsTemplate(
         text="誰が写ってる？", actions=[
             MessageAction(label=name_1, text=name_1),
             MessageAction(label="その他", text="その他")
@@ -114,7 +114,7 @@ def handle_image(event):
     elif num == 2:
         name_1 = name_list[0]
         name_2 = name_list[1]
-        buttons_template = ButtonTemplate(
+        buttons_template = ButtonsTemplate(
         text="誰が写ってる？", actions=[
             MessageAction(label=name_1, text=name_1),
             MessageAction(label=name_2, text=name_2),
@@ -125,7 +125,7 @@ def handle_image(event):
         name_1 = name_list[0]
         name_2 = name_list[1]
         name_3 = name_list[2]
-        buttons_template = ButtonTemplate(
+        buttons_template = ButtonsTemplate(
         text="誰が写ってる？", actions=[
             MessageAction(label=name_1, text=name_1),
             MessageAction(label=name_2, text=name_2),
