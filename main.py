@@ -167,7 +167,7 @@ def handle_text(event):
     if num < 3:
         user_name = session.query(User).filter(User.user_id==f"{user_id}", User.name==None).first()
         user_name.name = text_name
-        
+    """    
     #生年月日の確認
     line_bot_api.reply_message(
         event.reply_token,
@@ -179,27 +179,9 @@ def handle_text(event):
     if num < 3:
         user_day = session.query(User).filter(User.user_id==f"{user_id}", User.day==None).first()
         user_day.day = birthday
-    
+    """
     #撮影日の選択    
-    #select_day(src_image_path, event)
-    date_picker = TemplateSendMessage(
-        alt_text='撮影日を選択してね',
-        template=ButtonsTemplate(
-            text='撮影日を選択してね',
-            thumbnail_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}",
-            actions=[
-                DatetimePickerTemplateAction(
-                    label='選択',
-                    data='action=buy&itemid=1',
-                    mode='date',
-                    initial=str(datetime.date.today()),
-                    max=str(datetime.date.today())
-                )
-            ]
-        )
-    )
-    
-    line_bot_api.reply_message(event.reply_token,date_picker)
+    select_day(src_image_path, event)
 
 #画像を処理して送信
 @handler.add(PostbackEvent)
