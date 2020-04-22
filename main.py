@@ -174,6 +174,7 @@ def handle_text(event):
         TextSendMessage(text=text_name+"さんの生年月日を◯◯◯◯-◯◯-◯◯の形式で入力してね"))
     #生年月日をbirthdayに代入
     birthday = event.message.text
+    print(birthday)
     
     #登録数が3より少ない場合、dayを追加
     if num < 3:
