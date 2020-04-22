@@ -143,7 +143,6 @@ def handle_image(event):
             #user_idを追加
             user1 = User(user_id=f"{user_id}")
             session.add(user1)
-            session.commit()
     #名前がある場合、生年月日を取得する
     else:
         text_name = event.message.text
@@ -238,6 +237,9 @@ def select_day(src_image_path, event):
         )
     )
     
+    if event.reply_token == "00000000000000000000000000000000":
+        return
+        
     line_bot_api.reply_message(
         event.reply_token,
         date_picker
