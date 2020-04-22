@@ -159,7 +159,7 @@ def handle_text(event):
     #user_id = event.source.user_id
     #ファイル名をmessage_idに変換したパス
     src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
-    print("a")
+    
     #名前をtext_nameに代入
     text_name = event.message.text
     
@@ -172,9 +172,9 @@ def handle_text(event):
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=text_name+"さんの生年月日を◯◯◯◯-◯◯-◯◯の形式で入力してね"))
+    print("a")
     #生年月日をbirthdayに代入
     birthday = event.message.text
-    print(birthday)
     
     #登録数が3より少ない場合、dayを追加
     if num < 3:
