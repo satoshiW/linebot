@@ -159,7 +159,7 @@ def handle_text(event):
     #user_id = event.source.user_id
     #ファイル名をmessage_idに変換したパス
     src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
-
+    print("a")
     #名前をtext_nameに代入
     text_name = event.message.text
     
@@ -167,7 +167,6 @@ def handle_text(event):
     if num < 3:
         user_name = session.query(User).filter(User.user_id==f"{user_id}", User.name==None).first()
         user_name.name = text_name
-        session.commit()
     
     #生年月日の確認
     line_bot_api.reply_message(
