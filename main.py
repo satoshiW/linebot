@@ -220,14 +220,14 @@ def save_image(message_id: str, save_path: str) -> None:
 
 #撮影日の選択関数
 def select_day(src_image_path, event):
-    #if "birthday" in locals():
-      #  message = "撮影日を選択してね"
-    #else:
-      #  message = "生年月日を選択してね"
+    if "birthday" in locals():
+        message = "撮影日を選択してね"
+    else:
+        message = "生年月日を選択してね"
     date_picker = TemplateSendMessage(
-        alt_text="撮影日を選択してね",
+        alt_text=message,
         template=ButtonsTemplate(
-            text="撮影日を選択してね",
+            text=message,
             thumbnail_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}",
             actions=[
                 DatetimePickerTemplateAction(
