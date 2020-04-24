@@ -203,8 +203,8 @@ def handle_postback(event):
             user_day.day = birthday
         
         line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text="撮影日を選択してね"))    
+            event.reply_token,
+            TextSendMessage(text="撮影日を選択してね"))    
         #撮影日の選択    
         select_day(src_image_path, event)
 
@@ -220,9 +220,9 @@ def save_image(message_id: str, save_path: str) -> None:
 #撮影日の選択関数
 def select_day(src_image_path, event):
     date_picker = TemplateSendMessage(
-        #alt_text='撮影日を選択してね',
+        alt_text='撮影日を選択してね',
         template=ButtonsTemplate(
-            #text='撮影日を選択してね',
+            text='撮影日を選択してね',
             thumbnail_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}",
             actions=[
                 DatetimePickerTemplateAction(
