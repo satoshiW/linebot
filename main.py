@@ -225,15 +225,15 @@ def select_day(src_image_path, event):
     #else:
       #  message = "生年月日を選択してね"
     date_picker = TemplateSendMessage(
-        #alt_text='撮影日を選択してね',
+        alt_text="撮影日を選択してね",
         template=ButtonsTemplate(
-            #text=message,
+            text="撮影日を選択してね",
             thumbnail_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}",
             actions=[
                 DatetimePickerTemplateAction(
-                    label='選択',
-                    data='action=buy&itemid=1',
-                    mode='date',
+                    label="選択",
+                    data="action=buy&itemid=1",
+                    mode="date",
                     initial=str(datetime.date.today()),
                     max=str(datetime.date.today())
                 )
