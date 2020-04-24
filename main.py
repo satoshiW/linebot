@@ -147,7 +147,7 @@ def handle_image(event):
         #res = session.query(User.day).filter(User.user_id==f"{user_id}", User.name==f"{text_name}").first()
         birthday = user_dict[text_name]
         #撮影日の選択            
-        select_day(src_image_path, event)
+        select_day(event)
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text(event):
@@ -216,7 +216,7 @@ def select_day(event):
         alt_text=message,
         template=ButtonsTemplate(
             text=message,
-            thumbnail_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}",
+            thumbnail_image_url=src_image_path,#f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}"
             actions=[
                 DatetimePickerTemplateAction(
                     label="選択",
