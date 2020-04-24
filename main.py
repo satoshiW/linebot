@@ -168,11 +168,12 @@ def handle_text(event):
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=text_name+"さんの生年月日を選択してね"))"""
-    select_day(src_image_path, event, text_name)
+    select_day(src_image_path, event)
     
 #画像を処理して送信
 @handler.add(PostbackEvent)
-def handle_postback(event):    
+def handle_postback(event):
+    global birthday
     #ファイル名をmessage_idに変換したパス
     src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
     main_image_path = MAIN_IMAGE_PATH.format(message_id)
@@ -206,7 +207,7 @@ def handle_postback(event):
             event.reply_token,
             TextSendMessage(text="撮影日を選択してね"))"""
         #撮影日の選択    
-        select_day(src_image_path, event, birthday)
+        select_day(src_image_path, event)
 
 #画像保存関数
 def save_image(message_id: str, save_path: str) -> None:
@@ -218,11 +219,11 @@ def save_image(message_id: str, save_path: str) -> None:
             f.write(chunk)
 
 #撮影日の選択関数
-def select_day(src_image_path, event, text_name, birthday):
+def select_day(src_image_path, event):
     if "birthday" in locals():
         message = "撮影日を選択してね"
     else:
-        message = text_name+"さんの生年月日を選択してね"
+        message = "生年月日を選択してね"
     date_picker = TemplateSendMessage(
         #alt_text='撮影日を選択してね',
         template=ButtonsTemplate(
