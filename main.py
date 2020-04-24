@@ -70,18 +70,16 @@ def handle_follow(event):
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=
-        "友達登録ありがとう。画像を送信して撮影日を教えてくれたら、その日付を画像に書き込むよ"))
+        "友達登録ありがとう。画像を送信して撮影日を教えてくれたら、その日付を画像に書き込むよ。"))
 
 #画像の受け取り
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image(event):
-    global message_id, user_id, num
+    global message_id, user_id, num, src_image_path
     #message_idを取得
     message_id = event.message.id
     #user_idを取得
     user_id = event.source.user_id
-    #message_idをリストに格納
-    #message_list.append(message_id)
     
     #ファイル名をmessage_idに変換したパス
     src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
@@ -153,9 +151,6 @@ def handle_image(event):
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text(event):
-    #ファイル名をmessage_idに変換したパス
-    src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
-    
     #名前をtext_nameに代入
     text_name = event.message.text
     
@@ -163,19 +158,15 @@ def handle_text(event):
     if num < 3:
         user_name = session.query(User).filter(User.user_id==f"{user_id}", User.name==None).first()
         user_name.name = text_name
-    """
-    #生年月日の確認
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=text_name+"さんの生年月日を選択してね"))"""
-    select_day(src_image_path, event)
+    
+    #生年月日の選択
+    select_day(event)
     
 #画像を処理して送信
 @handler.add(PostbackEvent)
 def handle_postback(event):
     global birthday
     #ファイル名をmessage_idに変換したパス
-    src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
     main_image_path = MAIN_IMAGE_PATH.format(message_id)
     preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
     
@@ -202,12 +193,9 @@ def handle_postback(event):
         if num < 3:
             user_day = session.query(User).filter(User.user_id==f"{user_id}", User.day==None).first()
             user_day.day = birthday
-        """
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text="撮影日を選択してね"))"""
+        
         #撮影日の選択    
-        select_day(src_image_path, event)
+        select_day(event)
 
 #画像保存関数
 def save_image(message_id: str, save_path: str) -> None:
@@ -219,7 +207,7 @@ def save_image(message_id: str, save_path: str) -> None:
             f.write(chunk)
 
 #撮影日の選択関数
-def select_day(src_image_path, event):
+def select_day(event):
     if "birthday" in globals():
         message = "撮影日を選択してね"
     else:
