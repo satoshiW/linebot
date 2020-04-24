@@ -163,15 +163,12 @@ def handle_text(event):
     if num < 3:
         user_name = session.query(User).filter(User.user_id==f"{user_id}", User.name==None).first()
         user_name.name = text_name
-    
+    """
     #生年月日の確認
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=text_name+"さんの生年月日を選択してね"))
-    #select_day(src_image_path, event)
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=text_name+"さんの生年月日を選択してね"))
+        TextSendMessage(text=text_name+"さんの生年月日を選択してね"))"""
+    select_day(src_image_path, event, text_name)
     
 #画像を処理して送信
 @handler.add(PostbackEvent)
@@ -204,12 +201,12 @@ def handle_postback(event):
         if num < 3:
             user_day = session.query(User).filter(User.user_id==f"{user_id}", User.day==None).first()
             user_day.day = birthday
-        
+        """
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text="撮影日を選択してね"))    
+            TextSendMessage(text="撮影日を選択してね"))"""
         #撮影日の選択    
-        select_day(src_image_path, event)
+        select_day(src_image_path, event, birthday)
 
 #画像保存関数
 def save_image(message_id: str, save_path: str) -> None:
@@ -221,11 +218,15 @@ def save_image(message_id: str, save_path: str) -> None:
             f.write(chunk)
 
 #撮影日の選択関数
-def select_day(src_image_path, event):
+def select_day(src_image_path, event, text_name, birthday):
+    if "birthday" in locals():
+        message = "撮影日を選択してね"
+    else:
+        message = text_name+"さんの生年月日を選択してね"
     date_picker = TemplateSendMessage(
         #alt_text='撮影日を選択してね',
         template=ButtonsTemplate(
-            #text='撮影日を選択してね',
+            text=message,
             thumbnail_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}",
             actions=[
                 DatetimePickerTemplateAction(
