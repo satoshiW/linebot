@@ -179,7 +179,7 @@ def handle_postback(event):
     main_image_path = MAIN_IMAGE_PATH.format(message_id)
     preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
     
-    if "birthday" in locals():
+    if "birthday" in globals():
         #画像処理
         date_the_image(src_image_path, Path(main_image_path).absolute(), event)
         date_the_image(src_image_path, Path(preview_image_path).absolute(), event)
