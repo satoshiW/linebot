@@ -153,10 +153,6 @@ def handle_image(event):
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text(event):
-    #最新のmessage_idをリストから取得
-    #message_id = message_list[-1]
-    #user_idを取得
-    #user_id = event.source.user_id
     #ファイル名をmessage_idに変換したパス
     src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
     
@@ -171,43 +167,46 @@ def handle_text(event):
     #生年月日の確認
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=text_name+"さんの生年月日を◯◯◯◯-◯◯-◯◯の形式で入力してね"))
-    #生年月日をbirthdayに代入
-    birthday = event.message.text
-    
-    #登録数が3より少ない場合、dayを追加
-    if num < 3:
-        user_day = session.query(User).filter(User.user_id==f"{user_id}", User.day==None).first()
-        #user_day.day = birthday
-        
-    #撮影日の選択    
+        TextSendMessage(text=text_name+"さんの生年月日を選択してね"))
     select_day(src_image_path, event)
-
+    
 #画像を処理して送信
 @handler.add(PostbackEvent)
-def handle_postback(event):
-    #最新のmessage_idをリストから取得
-    #message_id = message_list[-1]
-    
+def handle_postback(event):    
     #ファイル名をmessage_idに変換したパス
     src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
     main_image_path = MAIN_IMAGE_PATH.format(message_id)
     preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
     
-    #画像処理
-    date_the_image(src_image_path, Path(main_image_path).absolute(), event)
-    date_the_image(src_image_path, Path(preview_image_path).absolute(), event)
+    if "birthday" in locals():
+        #画像処理
+        date_the_image(src_image_path, Path(main_image_path).absolute(), event)
+        date_the_image(src_image_path, Path(preview_image_path).absolute(), event)
 
-    # 画像の送信
-    image_message = ImageSendMessage(
-            original_content_url=f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}",
-            preview_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{preview_image_path}"
-    )
+        # 画像の送信
+        image_message = ImageSendMessage(
+                original_content_url=f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}",
+                preview_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{preview_image_path}"
+        )
     
-    #ログの取得
-    app.logger.info(f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}")
+        #ログの取得
+        app.logger.info(f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}")
     
-    line_bot_api.reply_message(event.reply_token, image_message)
+        line_bot_api.reply_message(event.reply_token, image_message)
+    else:
+        #生年月日をbirthdayに代入
+        birthday = event.postback.params['date']
+    
+        #登録数が3より少ない場合、dayを追加
+        if num < 3:
+            user_day = session.query(User).filter(User.user_id==f"{user_id}", User.day==None).first()
+            user_day.day = birthday
+        
+        line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text="撮影日を選択してね"))    
+        #撮影日の選択    
+        select_day(src_image_path, event)
 
 #画像保存関数
 def save_image(message_id: str, save_path: str) -> None:
@@ -221,9 +220,9 @@ def save_image(message_id: str, save_path: str) -> None:
 #撮影日の選択関数
 def select_day(src_image_path, event):
     date_picker = TemplateSendMessage(
-        alt_text='撮影日を選択してね',
+        #alt_text='撮影日を選択してね',
         template=ButtonsTemplate(
-            text='撮影日を選択してね',
+            #text='撮影日を選択してね',
             thumbnail_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}",
             actions=[
                 DatetimePickerTemplateAction(
@@ -245,7 +244,7 @@ def date_the_image(src: str, desc: str, event) -> None:
     draw = ImageDraw.Draw(im)
     font = ImageFont.truetype("./fonts/Helvetica.ttc", 50)
     #日時選択アクションの日付を取得
-    text = event.postback.params['date'] + user_dict
+    text = event.postback.params['date']
     #正規表現での文字列置換
     text_mod = re.sub("-", "/", text)
     #テキストのサイズ
