@@ -164,28 +164,14 @@ def handle_text(event):
         user_name = session.query(User).filter(User.user_id==f"{user_id}", User.name==None).first()
         user_name.name = text_name
     
-    date_picker = TemplateSendMessage(
-        #alt_text='撮影日を選択してね',
-        template=ButtonsTemplate(
-            #text='撮影日を選択してね',
-            thumbnail_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}",
-            actions=[
-                DatetimePickerTemplateAction(
-                    label='選択',
-                    data='action=buy&itemid=1',
-                    mode='date',
-                    initial=str(datetime.date.today()),
-                    max=str(datetime.date.today())
-                )
-            ]
-        )
-    )
-    
     #生年月日の確認
     line_bot_api.reply_message(
         event.reply_token,
-        TextSendMessage(text=text_name+"さんの生年月日を選択してね"), date_picker)
+        TextSendMessage(text=text_name+"さんの生年月日を選択してね"))
     #select_day(src_image_path, event)
+    line_bot_api.reply_message(
+        event.reply_token,
+        TextSendMessage(text=text_name+"さんの生年月日を選択してね"))
     
 #画像を処理して送信
 @handler.add(PostbackEvent)
