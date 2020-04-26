@@ -160,7 +160,29 @@ def handle_text(event):
         user_name.name = text_name
     
     #生年月日の選択
-    select_day(event)
+    #select_day(event)
+    if "birthday" in globals():
+        message = "撮影日を選択してね"
+    else:
+        message = "生年月日を選択してね"
+    date_picker = TemplateSendMessage(
+        alt_text=message,
+        template=ButtonsTemplate(
+            text=message,
+            thumbnail_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}",
+            actions=[
+                DatetimePickerTemplateAction(
+                    label="選択",
+                    data="action=buy&itemid=1",
+                    mode="date",
+                    initial=str(datetime.date.today()),
+                    max=str(datetime.date.today())
+                )
+            ]
+        )
+    )
+    
+    line_bot_api.reply_message(event.reply_token, date_picker)
     
 #画像を処理して送信
 @handler.add(PostbackEvent)
@@ -206,7 +228,7 @@ def save_image(message_id: str, save_path: str) -> None:
         for chunk in message_content.iter_content():
             f.write(chunk)
 
-#撮影日の選択関数
+#日付選択関数
 def select_day(event):
     if "birthday" in globals():
         message = "撮影日を選択してね"
@@ -216,7 +238,7 @@ def select_day(event):
         alt_text=message,
         template=ButtonsTemplate(
             text=message,
-            thumbnail_image_url=f"{src_image_path}",#f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}"
+            thumbnail_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}",
             actions=[
                 DatetimePickerTemplateAction(
                     label="選択",
