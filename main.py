@@ -161,14 +161,14 @@ def handle_text(event):
     
     #生年月日の選択
     #select_day(event)
-    if "birthday" in globals():
-        message = "撮影日を選択してね"
-    else:
-        message = "生年月日を選択してね"
+    #if "birthday" in globals():
+        #message = "撮影日を選択してね"
+    #else:
+        #message = "生年月日を選択してね"
     date_picker = TemplateSendMessage(
-        alt_text=message,
+        alt_text="a",
         template=ButtonsTemplate(
-            text=message,
+            text="a",
             thumbnail_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}",
             actions=[
                 DatetimePickerTemplateAction(
