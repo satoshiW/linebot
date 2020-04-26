@@ -75,7 +75,7 @@ def handle_follow(event):
 #画像の受け取り
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image(event):
-    global message_id, user_id, num, src_image_path
+    global message_id, user_id, num
     #message_idを取得
     message_id = event.message.id
     #user_idを取得
@@ -151,6 +151,7 @@ def handle_image(event):
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text(event):
+    src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
     #名前をtext_nameに代入
     text_name = event.message.text
     
@@ -160,13 +161,14 @@ def handle_text(event):
         user_name.name = text_name
     
     #生年月日の選択
-    select_day(event)
+    select_day(src_image_path, event)
     
 #画像を処理して送信
 @handler.add(PostbackEvent)
 def handle_postback(event):
     global birthday
     #ファイル名をmessage_idに変換したパス
+    src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
     main_image_path = MAIN_IMAGE_PATH.format(message_id)
     preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
     
@@ -195,7 +197,7 @@ def handle_postback(event):
             user_day.day = birthday
         
         #撮影日の選択    
-        select_day(event)
+        select_day(src_image_path, event)
 
 #画像保存関数
 def save_image(message_id: str, save_path: str) -> None:
@@ -207,7 +209,7 @@ def save_image(message_id: str, save_path: str) -> None:
             f.write(chunk)
 
 #日付選択関数
-def select_day(event):
+def select_day(src_image_path, event):
     if "birthday" in globals():
         message = "撮影日を選択してね"
     else:
