@@ -244,7 +244,7 @@ def date_the_image(src: str, desc: str, event, birthday) -> None:
     text_day = datetime.datetime.strptime(date, "%Y-%m-%d") - datetime.datetime.strptime(birthday, "%Y-%m-%d")
     years, days = divmod(text_day.days, 365)
     month = days // 12
-    text = text_name + f"({years}才{month}ヶ月"
+    text = str(text_name) + str(f"({years}才{month}ヶ月")
     
     #テキストのサイズ
     text_width = draw.textsize(text, font=font)[0]
