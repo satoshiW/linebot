@@ -75,7 +75,7 @@ def handle_follow(event):
 #画像の受け取り
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image(event):
-    global message_id, user_id, num
+    global message_id, user_id, num, src_image_path
     #message_idを取得
     message_id = event.message.id
     #user_idを取得
@@ -151,7 +151,7 @@ def handle_image(event):
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text(event):
-    src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
+    global text_name
     #名前をtext_nameに代入
     text_name = event.message.text
     
@@ -161,21 +161,20 @@ def handle_text(event):
         user_name.name = text_name
     
     #生年月日の選択
-    select_day(src_image_path, event)
+    select_day(event)
     
 #画像を処理して送信
 @handler.add(PostbackEvent)
 def handle_postback(event):
     global birthday
     #ファイル名をmessage_idに変換したパス
-    src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
     main_image_path = MAIN_IMAGE_PATH.format(message_id)
     preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
     
     if "birthday" in globals():
         #画像処理
-        date_the_image(src_image_path, Path(main_image_path).absolute(), event)
-        date_the_image(src_image_path, Path(preview_image_path).absolute(), event)
+        date_the_image(src_image_path, Path(main_image_path).absolute(), event, birthday)
+        date_the_image(src_image_path, Path(preview_image_path).absolute(), event, birthday)
 
         # 画像の送信
         image_message = ImageSendMessage(
@@ -189,7 +188,7 @@ def handle_postback(event):
         line_bot_api.reply_message(event.reply_token, image_message)
     else:
         #生年月日をbirthdayに代入
-        birthday = event.postback.params['date']
+        birthday = event.postback.params["date"]
     
         #登録数が3より少ない場合、dayを追加
         if num < 3:
@@ -197,7 +196,7 @@ def handle_postback(event):
             user_day.day = birthday
         
         #撮影日の選択    
-        select_day(src_image_path, event)
+        select_day(event)
 
 #画像保存関数
 def save_image(message_id: str, save_path: str) -> None:
@@ -209,11 +208,12 @@ def save_image(message_id: str, save_path: str) -> None:
             f.write(chunk)
 
 #日付選択関数
-def select_day(src_image_path, event):
+def select_day(event):
     if "birthday" in globals():
         message = "撮影日を選択してね"
     else:
         message = "生年月日を選択してね"
+        
     date_picker = TemplateSendMessage(
         alt_text=message,
         template=ButtonsTemplate(
@@ -234,18 +234,21 @@ def select_day(src_image_path, event):
     line_bot_api.reply_message(event.reply_token, date_picker)
 
 #画像処理関数
-def date_the_image(src: str, desc: str, event) -> None:
+def date_the_image(src: str, desc: str, event, birthday) -> None:
     im = Image.open(src)
     draw = ImageDraw.Draw(im)
     font = ImageFont.truetype("./fonts/Helvetica.ttc", 50)
-    #日時選択アクションの日付を取得
-    text = event.postback.params['date']
-    #正規表現での文字列置換
-    text_mod = re.sub("-", "/", text)
+    
+    #撮影日を取得
+    date = event.postback.params["date"]
+    text_day = datetime.datetime.strptime(date, "%Y-%m-%d") - datetime.datetime.strptime(birthday, "%Y-%m-%d")
+    years, days = divmod(text_day.days, 365)
+    month = days // 12
+    text = text_name + f"({years}才{month}ヶ月"
+    
     #テキストのサイズ
     text_width = draw.textsize(text_mod, font=font)[0]
     text_height = draw.textsize(text_mod, font=font)[1]
-    
     margin = 10
     x = im.width - text_width
     y = im.height - text_height
@@ -259,7 +262,7 @@ def date_the_image(src: str, desc: str, event) -> None:
     #画像に矩形とマスクを貼り付け
     im.paste(rect, (x - margin * 6, y - margin * 3), mask)
     #テキストの書き込み
-    draw.text((x - margin * 3, y - margin * 2), text_mod, fill=(255, 255, 255), font=font)
+    draw.text((x - margin * 3, y - margin * 2), text, fill=(255, 255, 255), font=font)
     im.save(desc)
 
 if __name__ == "__main__":
