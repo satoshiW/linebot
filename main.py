@@ -247,8 +247,8 @@ def date_the_image(src: str, desc: str, event, birthday) -> None:
     text = text_name + f"({years}才{month}ヶ月"
     
     #テキストのサイズ
-    text_width = draw.textsize(text_mod, font=font)[0]
-    text_height = draw.textsize(text_mod, font=font)[1]
+    text_width = draw.textsize(text, font=font)[0]
+    text_height = draw.textsize(text, font=font)[1]
     margin = 10
     x = im.width - text_width
     y = im.height - text_height
