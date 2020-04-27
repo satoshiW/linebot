@@ -237,7 +237,7 @@ def select_day(event):
 def date_the_image(src: str, desc: str, event, birthday) -> None:
     im = Image.open(src)
     draw = ImageDraw.Draw(im)
-    font = ImageFont.truetype("./fonts/ヒラギノ角ゴシック W4.ttc", 50)
+    font = ImageFont.truetype("./fonts/AquaKana.ttc", 50)
     
     #撮影日を取得
     date = event.postback.params["date"]
