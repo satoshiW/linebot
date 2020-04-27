@@ -237,14 +237,14 @@ def select_day(event):
 def date_the_image(src: str, desc: str, event, birthday) -> None:
     im = Image.open(src)
     draw = ImageDraw.Draw(im)
-    font = ImageFont.truetype("./fonts/Helvetica.ttc", 50)
+    font = ImageFont.truetype("./fonts/ヒラギノ角ゴシック W5.ttc", 50)
     
     #撮影日を取得
     date = event.postback.params["date"]
     text_day = datetime.datetime.strptime(date, "%Y-%m-%d") - datetime.datetime.strptime(birthday, "%Y-%m-%d")
     years, days = divmod(text_day.days, 365)
     month = days // 12
-    text = str(text_name) + str(f"({years}才{month}ヶ月")
+    text = text_name + f"({years}才{month}ヶ月"
     
     #テキストのサイズ
     text_width = draw.textsize(text, font=font)[0]
