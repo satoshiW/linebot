@@ -156,7 +156,7 @@ def handle_image(event):
 def handle_text(event):
     global text_name, birthday
     
-    if not text_name in globals():
+    if not "text_name" in globals():
         if event.message.text == "その他":
             line_bot_api.reply_message(
                 event.reply_token,
