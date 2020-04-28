@@ -70,7 +70,7 @@ def handle_follow(event):
 #画像の受け取り
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image(event):
-    global message_id, user_id, num, src_image_path, birthday
+    global message_id, user_id, num, src_image_path
     #message_idを取得
     message_id = event.message.id
     #user_idを取得
@@ -154,7 +154,7 @@ def handle_image(event):
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text(event):
-    global text_name
+    global text_name, birthday
     
     if event.message.text == "その他":
         line_bot_api.reply_message(
