@@ -107,6 +107,7 @@ def handle_image(event):
     if num == 1:
         name_1 = name_list[0]
         buttons_template = TemplateSendMessage(
+            alt_text="誰が写ってる？",
             template=ButtonsTemplate(
                 text="誰が写ってる？", actions=[
                     MessageAction(label=name_1, text=name_1),
@@ -121,6 +122,7 @@ def handle_image(event):
         name_1 = name_list[0]
         name_2 = name_list[1]
         buttons_template = TemplateSendMessage(
+            alt_text="誰が写ってる？",
             template=ButtonsTemplate(
                 text="誰が写ってる？", actions=[
                     MessageAction(label=name_1, text=name_1),
@@ -137,6 +139,7 @@ def handle_image(event):
         name_2 = name_list[1]
         name_3 = name_list[2]
         buttons_template = TemplateSendMessage(
+            alt_text="誰が写ってる？",
             template=ButtonsTemplate(
                 text="誰が写ってる？", actions=[
                     MessageAction(label=name_1, text=name_1),
