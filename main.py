@@ -43,9 +43,6 @@ SRC_IMAGE_PATH = "static/images/{}.jpg"
 MAIN_IMAGE_PATH = "static/images/{}_main.jpg"
 PREVIEW_IMAGE_PATH = "static/images/{}_preview.jpg"
 
-name_list = []
-user_dict = {}
-
 @app.route("/callback", methods=['POST'])
 def callback():
     signature = request.headers['X-Line-Signature']
@@ -71,6 +68,9 @@ def handle_follow(event):
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image(event):
     global message_id, user_id, num, src_image_path
+    
+    name_list = []
+    user_dict = {}
     #message_idを取得
     message_id = event.message.id
     #user_idを取得
@@ -208,6 +208,7 @@ def handle_postback(event):
         line_bot_api.reply_message(event.reply_token, image_message)
         
         session.commit()
+        session.close()
     else:
         #生年月日をbirthdayに代入
         birthday = event.postback.params["date"]
