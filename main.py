@@ -156,31 +156,28 @@ def handle_image(event):
 def handle_text(event):
     global text_name, birthday
     
-    if event.message.text == "その他":
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text="写真に写っている人の名前は？"))
-        #登録数が3より少ない場合、user_idを追加
-        if num < 3:
-            user1 = User(user_id=f"{user_id}")
-            session.add(user1)
-    #登録がある場合、生年月日を取得する
+    if not text_name in globals():
+        if event.message.text == "その他":
+            line_bot_api.reply_message(
+                event.reply_token,
+                TextSendMessage(text="写真に写っている人の名前は？"))
+            #名前をtext_nameに代入
+            text_name = event.message.text
+            #登録数が3より少ない場合、user_idを追加
+            if num < 3:
+                user1 = User(user_id=f"{user_id}")
+                session.add(user1)
+                user_name = session.query(User).filter(User.user_id==f"{user_id}", User.name==None).first()
+                user_name.name = text_name
+        #登録がある場合、生年月日を取得する
+        else:
+            text_name = event.message.text
+            birthday = user_dict[text_name]
+            #撮影日の選択            
+            select_day(event)
     else:
-        text_name = event.message.text
-        birthday = user_dict[text_name]
-        #撮影日の選択            
+        #生年月日の選択
         select_day(event)
-            
-    #名前をtext_nameに代入
-    text_name = event.message.text
-    
-    #登録数が3より少ない場合、nameを追加
-    if num < 3:
-        user_name = session.query(User).filter(User.user_id==f"{user_id}", User.name==None).first()
-        user_name.name = text_name
-    
-    #生年月日の選択
-    select_day(event)
     
 #画像を処理して送信
 @handler.add(PostbackEvent)
