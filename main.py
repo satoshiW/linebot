@@ -94,6 +94,7 @@ def handle_image(event):
         user_dict[row.name] = row.day
     #登録数
     num = len(name_list)
+    print(num)
     
     #1人登録の場合
     if num == 1:
