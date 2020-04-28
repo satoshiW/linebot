@@ -94,28 +94,41 @@ def handle_image(event):
         user_dict[row.name] = row.day
     #登録数
     num = len(name_list)
-    print(num)
     
+    #登録がない場合名前を確認する
+    if num == 0:
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text="写真に写っている人の名前は？"))
+        #user_idを追加
+        user1 = User(user_id=f"{user_id}")
+        session.add(user1)
     #1人登録の場合
     if num == 1:
         name_1 = name_list[0]
-        buttons_template = ButtonsTemplate(
-        text="誰が写ってる？", actions=[
-            MessageAction(label=name_1, text=name_1),
-            MessageAction(label="その他", text="その他")
-        ])
+        buttons_template = TemplateSendMessage(
+            template=ButtonsTemplate(
+                text="誰が写ってる？", actions=[
+                    MessageAction(label=name_1, text=name_1),
+                    MessageAction(label="その他", text="その他")
+                ]
+            )
+        )
         
         line_bot_api.reply_message(event.reply_token, buttons_template)
     #2人登録の場合
     elif num == 2:
         name_1 = name_list[0]
         name_2 = name_list[1]
-        buttons_template = ButtonsTemplate(
-        text="誰が写ってる？", actions=[
-            MessageAction(label=name_1, text=name_1),
-            MessageAction(label=name_2, text=name_2),
-            MessageAction(label="その他", text="その他")
-        ])
+        buttons_template = TemplateSendMessage(
+            template=ButtonsTemplate(
+                text="誰が写ってる？", actions=[
+                    MessageAction(label=name_1, text=name_1),
+                    MessageAction(label=name_2, text=name_2),
+                    MessageAction(label="その他", text="その他")
+                ]
+            )
+        )
         
         line_bot_api.reply_message(event.reply_token, buttons_template)
     #３人登録の場合
@@ -123,26 +136,18 @@ def handle_image(event):
         name_1 = name_list[0]
         name_2 = name_list[1]
         name_3 = name_list[2]
-        buttons_template = ButtonsTemplate(
-        text="誰が写ってる？", actions=[
-            MessageAction(label=name_1, text=name_1),
-            MessageAction(label=name_2, text=name_2),
-            MessageAction(label=name_3, text=name_3),
-            MessageAction(label="その他", text="その他")
-        ])
+        buttons_template = TemplateSendMessage(
+            template=ButtonsTemplate(
+                text="誰が写ってる？", actions=[
+                    MessageAction(label=name_1, text=name_1),
+                    MessageAction(label=name_2, text=name_2),
+                    MessageAction(label=name_3, text=name_3),
+                    MessageAction(label="その他", text="その他")
+                ]
+            )
+        )
         
         line_bot_api.reply_message(event.reply_token, buttons_template)
-        
-    #登録がないか選択がその他の場合、名前を確認する
-    if num == 0:
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text="写真に写っている人の名前は？"))
-        #登録数が3より少ない場合、user_idを追加
-        if num < 3:
-            user1 = User(user_id=f"{user_id}")
-            session.add(user1)
-    
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text(event):
