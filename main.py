@@ -104,7 +104,7 @@ def handle_image(event):
         user1 = User(user_id=f"{user_id}")
         session.add(user1)
     #1人登録の場合
-    if num == 1:
+    elif num == 1:
         name_1 = name_list[0]
         buttons_template = TemplateSendMessage(
             alt_text="誰が写ってる？",
@@ -263,7 +263,7 @@ def date_the_image(src: str, desc: str, event) -> None:
     
     #撮影日を取得
     date = event.postback.params["date"]
-    text_day = datetime.datetime.strptime(date, "%Y-%m-%d") - datetime.datetime.strptime(birthday, "%Y-%m-%d")
+    text_day = datetime.datetime.strptime(date, "%Y-%m-%d") - datetime.datetime.strptime(str(birthday), "%Y-%m-%d")
     years, days = divmod(text_day.days, 365)
     month = days // 12
     text = text_name + f"({years}才{month}ヶ月)"
