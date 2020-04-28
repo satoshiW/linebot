@@ -101,8 +101,7 @@ def handle_image(event):
             event.reply_token,
             TextSendMessage(text="写真に写っている人の名前は？"))
         #user_idを追加
-        user1 = User(user_id=f"{user_id}")
-        session.add(user1)
+        add_user_id()
     #1人登録の場合
     elif num == 1:
         name_1 = name_list[0]
@@ -117,6 +116,9 @@ def handle_image(event):
         )
         
         line_bot_api.reply_message(event.reply_token, buttons_template)
+        
+        #user_idを追加
+        add_user_id()
     #2人登録の場合
     elif num == 2:
         name_1 = name_list[0]
@@ -133,6 +135,9 @@ def handle_image(event):
         )
         
         line_bot_api.reply_message(event.reply_token, buttons_template)
+        
+        #user_idを追加
+        add_user_id()
     #３人登録の場合
     elif num == 3:
         name_1 = name_list[0]
@@ -226,6 +231,10 @@ def save_image(message_id: str, save_path: str) -> None:
         # 取得したバイナリデータを書き込む
         for chunk in message_content.iter_content():
             f.write(chunk)
+
+def add_user_id():
+    user1 = User(user_id=f"{user_id}")
+    session.add(user1)
 
 #日付選択関数
 def select_day(event):
