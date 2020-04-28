@@ -127,7 +127,7 @@ def handle_image(event):
         ])
     
     #登録がないか選択がその他の場合、名前を確認する
-    if num == 0 or event.message.text == "その他":
+    if num == 0:
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text="写真に写っている人の名前は？"))
@@ -145,6 +145,16 @@ def handle_image(event):
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text(event):
     global text_name
+    
+    if event.message.text == "その他":
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text="写真に写っている人の名前は？"))
+        #登録数が3より少ない場合、user_idを追加
+        if num < 3:
+            user1 = User(user_id=f"{user_id}")
+            session.add(user1)
+            
     #名前をtext_nameに代入
     text_name = event.message.text
     
