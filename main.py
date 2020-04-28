@@ -135,12 +135,7 @@ def handle_image(event):
         if num < 3:
             user1 = User(user_id=f"{user_id}")
             session.add(user1)
-    #登録がある場合、生年月日を取得する
-    else:
-        text_name = event.message.text
-        birthday = user_dict[text_name]
-        #撮影日の選択            
-        select_day(event)
+    
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text(event):
@@ -154,6 +149,12 @@ def handle_text(event):
         if num < 3:
             user1 = User(user_id=f"{user_id}")
             session.add(user1)
+    #登録がある場合、生年月日を取得する
+    else:
+        text_name = event.message.text
+        birthday = user_dict[text_name]
+        #撮影日の選択            
+        select_day(event)
             
     #名前をtext_nameに代入
     text_name = event.message.text
