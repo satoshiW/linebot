@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, String, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
-
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import (FollowEvent, PostbackEvent, TemplateSendMessage, \
@@ -13,7 +12,6 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import datetime
 import os
-import re
 
 #import database
 
@@ -45,15 +43,12 @@ SRC_IMAGE_PATH = "static/images/{}.jpg"
 MAIN_IMAGE_PATH = "static/images/{}_main.jpg"
 PREVIEW_IMAGE_PATH = "static/images/{}_preview.jpg"
 
-#message_idを格納する為のリスト
-#message_list = []
 name_list = []
 user_dict = {}
 
 @app.route("/callback", methods=['POST'])
 def callback():
     signature = request.headers['X-Line-Signature']
-
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
 
@@ -70,12 +65,12 @@ def handle_follow(event):
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=
-        "友達登録ありがとう。画像を送信して撮影日を教えてくれたら、その日付を画像に書き込むよ。"))
+        "友達登録ありがとう。画像を送ってくれたら写っている人が何歳ごろかを画像に書き込むよ。"))
 
 #画像の受け取り
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image(event):
-    global message_id, user_id, num, src_image_path
+    global message_id, user_id, num, src_image_path, birthday
     #message_idを取得
     message_id = event.message.id
     #user_idを取得
@@ -93,11 +88,11 @@ def handle_image(event):
     
     #user_idが一致する行を検索
     names = session.query(User.name, User.day).filter(User.user_id==f"{user_id}").all()
-    #一致した行のnameをリストへ挿入
+    #一致した行のデータをリストと辞書へ挿入
     for row in names:
         name_list.append(row.name)
         user_dict[row.name] = row.day
-    #nameの数
+    #登録数
     num = len(name_list)
     
     #1人登録の場合
@@ -138,13 +133,11 @@ def handle_image(event):
             TextSendMessage(text="写真に写っている人の名前は？"))
         #登録数が3より少ない場合、user_idを追加
         if num < 3:
-            #user_idを追加
             user1 = User(user_id=f"{user_id}")
             session.add(user1)
-    #名前がある場合、生年月日を取得する
+    #登録がある場合、生年月日を取得する
     else:
         text_name = event.message.text
-        #res = session.query(User.day).filter(User.user_id==f"{user_id}", User.name==f"{text_name}").first()
         birthday = user_dict[text_name]
         #撮影日の選択            
         select_day(event)
@@ -173,10 +166,10 @@ def handle_postback(event):
     
     if "birthday" in globals():
         #画像処理
-        date_the_image(src_image_path, Path(main_image_path).absolute(), event, birthday)
-        date_the_image(src_image_path, Path(preview_image_path).absolute(), event, birthday)
+        date_the_image(src_image_path, Path(main_image_path).absolute(), event)
+        date_the_image(src_image_path, Path(preview_image_path).absolute(), event)
 
-        # 画像の送信
+        # 画像を指定
         image_message = ImageSendMessage(
                 original_content_url=f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}",
                 preview_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{preview_image_path}"
@@ -184,8 +177,11 @@ def handle_postback(event):
     
         #ログの取得
         app.logger.info(f"https://hidden-anchorage-52228.herokuapp.com/{main_image_path}")
-    
+        
+        #画像の送信
         line_bot_api.reply_message(event.reply_token, image_message)
+        
+        session.commit()
     else:
         #生年月日をbirthdayに代入
         birthday = event.postback.params["date"]
@@ -234,7 +230,7 @@ def select_day(event):
     line_bot_api.reply_message(event.reply_token, date_picker)
 
 #画像処理関数
-def date_the_image(src: str, desc: str, event, birthday) -> None:
+def date_the_image(src: str, desc: str, event) -> None:
     im = Image.open(src)
     draw = ImageDraw.Draw(im)
     font = ImageFont.truetype("./fonts/AquaKana.ttc", 50)
@@ -244,7 +240,7 @@ def date_the_image(src: str, desc: str, event, birthday) -> None:
     text_day = datetime.datetime.strptime(date, "%Y-%m-%d") - datetime.datetime.strptime(birthday, "%Y-%m-%d")
     years, days = divmod(text_day.days, 365)
     month = days // 12
-    text = text_name + f"({years}才{month}ヶ月"
+    text = text_name + f"({years}才{month}ヶ月)"
     
     #テキストのサイズ
     text_width = draw.textsize(text, font=font)[0]
