@@ -104,6 +104,8 @@ def handle_image(event):
             MessageAction(label=name_1, text=name_1),
             MessageAction(label="その他", text="その他")
         ])
+        
+        line_bot_api.reply_message(event.reply_token, buttons_template)
     #2人登録の場合
     elif num == 2:
         name_1 = name_list[0]
@@ -114,6 +116,8 @@ def handle_image(event):
             MessageAction(label=name_2, text=name_2),
             MessageAction(label="その他", text="その他")
         ])
+        
+        line_bot_api.reply_message(event.reply_token, buttons_template)
     #３人登録の場合
     elif num == 3:
         name_1 = name_list[0]
@@ -126,7 +130,9 @@ def handle_image(event):
             MessageAction(label=name_3, text=name_3),
             MessageAction(label="その他", text="その他")
         ])
-    
+        
+        line_bot_api.reply_message(event.reply_token, buttons_template)
+        
     #登録がないか選択がその他の場合、名前を確認する
     if num == 0:
         line_bot_api.reply_message(
