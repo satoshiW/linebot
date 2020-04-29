@@ -25,8 +25,8 @@ def serch_data(user_id):
 	
 def add_data(user_id):
 	user1 = User(user_id=f"{user_id}")
-    session.add(user1)
+	session.add(user1)
     
 def close_db():
 	session.commit()
-    session.close()
+	session.close()
