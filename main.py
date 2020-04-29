@@ -1,8 +1,4 @@
 from flask import Flask, request, abort
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine, Column, String, Date
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import Session
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import (FollowEvent, PostbackEvent, TemplateSendMessage, MessageAction,\
@@ -12,6 +8,8 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import datetime
 import os
+
+import database
 
 #import database
 
@@ -24,19 +22,6 @@ YOUR_CHANNEL_SECRET = os.environ["YOUR_CHANNEL_SECRET"]
 
 line_bot_api = LineBotApi(YOUR_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(YOUR_CHANNEL_SECRET)
-
-engine = create_engine("postgresql://vmmfszxyquhraz:dde9deee8b575db7a8f4214d70e99429a5bb1\
-a73d018ce8665642754005ed4ed@ec2-52-86-73-86.compute-1.amazonaws.com:5432/d1l9tnctjr6utu")
-Base = declarative_base()
-
-class User(Base):
-	__tablename__ = "user_list"
-	user_id = Column("user_id", String(50), primary_key=True)
-	name = Column("name", String(10))
-	day = Column("day", Date)
-
-Base.metadata.create_all(engine)
-session = Session(bind=engine)
 
 #画像の参照元パス
 SRC_IMAGE_PATH = "static/images/{}.jpg"
@@ -67,10 +52,11 @@ def handle_follow(event):
 #画像の受け取り
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image(event):
-    global message_id, user_id, num, src_image_path
+    global message_id, user_id, num, src_image_path, user_data
     
+    data_list = []
     name_list = []
-    user_dict = {}
+    day_list = []
     #message_idを取得
     message_id = event.message.id
     #user_idを取得
@@ -86,102 +72,105 @@ def handle_image(event):
     im = Image.open(src_image_path)
     im.save(src_image_path)
     
-    #user_idが一致する行を検索
-    names = session.query(User.name, User.day).filter(User.user_id==f"{user_id}").all()
-    #一致した行のデータをリストと辞書へ挿入
-    for row in names:
-        name_list.append(row.name)
-        user_dict[row.name] = row.day
-    #登録数
-    num = len(name_list)
+    #user_idを検索して内容をリストへ挿入
+    database.serch_data(user_id).append(data_list)
     
     #登録がない場合名前を確認する
-    if num == 0:
+    if len(data_list) == 1:
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text="写真に写っている人の名前は？"))
         #user_idを追加
-        add_user_id()
-    #1人登録の場合
-    elif num == 1:
-        name_1 = name_list[0]
-        buttons_template = TemplateSendMessage(
-            alt_text="誰が写ってる？",
-            template=ButtonsTemplate(
-                text="誰が写ってる？", actions=[
-                    MessageAction(label=name_1, text=name_1),
-                    MessageAction(label="その他", text="その他")
-                ]
+        database.add_data(user_id)
+    #登録がある場合内容を確認
+    elif len(data_list) >= 1:
+        #None以外をリストへ挿入
+        names = [n for n in data_list if n is not None and type(n) is str]
+        days = [d for d in data_list if type(d) is int]
+        
+        name_list.append(names)
+        day_list.append(days)
+        
+        #nameとdayで辞書を作成
+        user_dict = dict(zip(nema_list, day_list))
+        #登録数
+        num = len(name_list)
+    
+        #1人登録の場合
+        if num == 1:
+            name_1 = name_list[0]
+            buttons_template = TemplateSendMessage(
+                alt_text="誰が写ってる？",
+                template=ButtonsTemplate(
+                    text="誰が写ってる？", actions=[
+                        MessageAction(label=name_1, text=name_1),
+                        MessageAction(label="その他", text="その他")
+                    ]
+                )
             )
-        )
         
-        line_bot_api.reply_message(event.reply_token, buttons_template)
-        
-        #user_idを追加
-        add_user_id()
-    #2人登録の場合
-    elif num == 2:
-        name_1 = name_list[0]
-        name_2 = name_list[1]
-        buttons_template = TemplateSendMessage(
-            alt_text="誰が写ってる？",
-            template=ButtonsTemplate(
-                text="誰が写ってる？", actions=[
-                    MessageAction(label=name_1, text=name_1),
-                    MessageAction(label=name_2, text=name_2),
-                    MessageAction(label="その他", text="その他")
-                ]
+        #2人登録の場合
+        elif num == 2:
+            name_1 = name_list[0]
+            name_2 = name_list[1]
+            buttons_template = TemplateSendMessage(
+                alt_text="誰が写ってる？",
+                template=ButtonsTemplate(
+                    text="誰が写ってる？", actions=[
+                        MessageAction(label=name_1, text=name_1),
+                        MessageAction(label=name_2, text=name_2),
+                        MessageAction(label="その他", text="その他")
+                    ]
+                )
             )
-        )
         
-        line_bot_api.reply_message(event.reply_token, buttons_template)
-        
-        #user_idを追加
-        add_user_id()
-    #３人登録の場合
-    elif num == 3:
-        name_1 = name_list[0]
-        name_2 = name_list[1]
-        name_3 = name_list[2]
-        buttons_template = TemplateSendMessage(
-            alt_text="誰が写ってる？",
-            template=ButtonsTemplate(
-                text="誰が写ってる？", actions=[
-                    MessageAction(label=name_1, text=name_1),
-                    MessageAction(label=name_2, text=name_2),
-                    MessageAction(label=name_3, text=name_3),
-                    MessageAction(label="その他", text="その他")
-                ]
+        #３人登録の場合
+        elif num == 3:
+            name_1 = name_list[0]
+            name_2 = name_list[1]
+            name_3 = name_list[2]
+            buttons_template = TemplateSendMessage(
+                alt_text="誰が写ってる？",
+                template=ButtonsTemplate(
+                    text="誰が写ってる？", actions=[
+                        MessageAction(label=name_1, text=name_1),
+                        MessageAction(label=name_2, text=name_2),
+                        MessageAction(label=name_3, text=name_3),
+                        MessageAction(label="その他", text="その他")
+                    ]
+                )
             )
-        )
         
         line_bot_api.reply_message(event.reply_token, buttons_template)
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text(event):
     global text_name, birthday
-    
-    if not "text_name" in globals():
-        if event.message.text == "その他":
-            line_bot_api.reply_message(
-                event.reply_token,
-                TextSendMessage(text="写真に写っている人の名前は？"))
-            #名前をtext_nameに代入
-            text_name = event.message.text
-            #登録数が3より少ない場合、user_idを追加
-            if num < 3:
-                user1 = User(user_id=f"{user_id}")
-                session.add(user1)
-                user_name = session.query(User).filter(User.user_id==f"{user_id}", User.name==None).first()
-                user_name.name = text_name
-        #登録がある場合、生年月日を取得する
-        else:
-            text_name = event.message.text
-            birthday = user_dict[text_name]
-            #撮影日の選択            
-            select_day(event)
-    else:
+
+    if num == 0:
+        text_name = event.message.text
         #生年月日の選択
+        select_day(event)
+    elif event.message.text == "その他":
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text="写真に写っている人の名前は？"))
+    #登録がある場合、生年月日を取得する
+    else:
+        text_name = event.message.text
+            
+        #名前が登録済みの場合、生年月日を取得
+        if text_name in name_list:
+            birthday = user_dict[text_name]
+        #名前の登録がない場合、nameを追加
+        elif not text_name in name_list:
+            #登録数が1か2の場合、nameを追加
+            if num == 1:
+                user_name.name2 = text_name
+            elif num == 2:
+                user_name.name3 = text_name
+            
+        #ifの場合撮影日、elifの場合生年月日の選択            
         select_day(event)
     
 #画像を処理して送信
@@ -192,7 +181,21 @@ def handle_postback(event):
     main_image_path = MAIN_IMAGE_PATH.format(message_id)
     preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
     
-    if "birthday" in globals():
+    if not "birthday" in globals():
+        #生年月日をbirthdayに代入
+        birthday = event.postback.params["date"]
+    
+        #登録数が3より少ない場合、dayを追加
+        if num == 0:
+            database.serch_data(user_id).day1 = birthday
+        elif num == 1:
+            database.serch_data(user_id).day2 = birthday
+        elif num == 2:
+            database.serch_data(user_id).day3 = birthday
+            
+        #撮影日の選択    
+        select_day(event)
+    elif "birthday" in globals():
         #画像処理
         date_the_image(src_image_path, Path(main_image_path).absolute(), event)
         date_the_image(src_image_path, Path(preview_image_path).absolute(), event)
@@ -209,19 +212,7 @@ def handle_postback(event):
         #画像の送信
         line_bot_api.reply_message(event.reply_token, image_message)
         
-        session.commit()
-        session.close()
-    else:
-        #生年月日をbirthdayに代入
-        birthday = event.postback.params["date"]
-    
-        #登録数が3より少ない場合、dayを追加
-        if num < 3:
-            user_day = session.query(User).filter(User.user_id==f"{user_id}", User.day==None).first()
-            user_day.day = birthday
-        
-        #撮影日の選択    
-        select_day(event)
+        database.close_db()
 
 #画像保存関数
 def save_image(message_id: str, save_path: str) -> None:
@@ -232,15 +223,11 @@ def save_image(message_id: str, save_path: str) -> None:
         for chunk in message_content.iter_content():
             f.write(chunk)
 
-def add_user_id():
-    user1 = User(user_id=f"{user_id}")
-    session.add(user1)
-
 #日付選択関数
 def select_day(event):
     if "birthday" in globals():
         message = "撮影日を選択してね"
-    else:
+    elif not "birthday" in globals():
         message = "生年月日を選択してね"
         
     date_picker = TemplateSendMessage(
@@ -270,8 +257,8 @@ def date_the_image(src: str, desc: str, event) -> None:
     
     #撮影日を取得
     date = event.postback.params["date"]
-    text_day = datetime.datetime.strptime(date, "%Y-%m-%d") - datetime.datetime.strptime(str(birthday), "%Y-%m-%d")
-    years, days = divmod(text_day.days, 365)
+    how_old = datetime.datetime.strptime(date, "%Y-%m-%d") - datetime.datetime.strptime(str(birthday), "%Y-%m-%d")
+    years, days = divmod(how_old.days, 365)
     month = days // 12
     text = text_name + f"({years}才{month}ヶ月)"
     
