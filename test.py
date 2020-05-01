@@ -24,7 +24,7 @@ session = Session(bind=engine)
 user_id = 1
 name_list = []
 
-data = session.query(User.name1, User.day1, User.name2, User.day2, User.name3, User.day3).filter(User.user_id==f"{user_id}").one()
+data = session.query(User).filter(User.user_id==f"{user_id}").one()
 data.day1 = "1000-09-09"
 session.commit()
 
