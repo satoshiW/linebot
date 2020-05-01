@@ -73,10 +73,7 @@ def handle_image(event):
     im.save(src_image_path)
     
     #user_idを検索して内容をリストへ挿入
-    try:
-        database.serch_data(user_id).append(data_list)
-    except NoResultFound:
-        pass
+    database.serch_data(user_id, data_list)
     
     #登録がない場合名前を確認する
     if len(data_list) == 0:
