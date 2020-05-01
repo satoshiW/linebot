@@ -25,9 +25,9 @@ def serch_data(user_id, data_list):
 	res = session.query(User.name1, User.day1, User.name2, User.day2, User.name3, User.day3).filter(User.user_id==f"{user_id}").one()
 	
 	try:
-        data_list = [i for i in res if i is not None]
-    except NoResultFound:
-        pass
+		data_list = [i for i in res if i is not None]
+	except NoResultFound:
+		pass
 	
 def add_data(user_id):
 	user1 = User(user_id=f"{user_id}")
