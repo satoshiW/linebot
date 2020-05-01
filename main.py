@@ -189,7 +189,7 @@ def handle_postback(event):
         birthday = event.postback.params["date"]
     
         #登録数が3より少ない場合、dayを追加
-        database.update_data(num, birthday)
+        database.update_data(user_id, num, birthday)
             
         #撮影日の選択    
         select_day(event)

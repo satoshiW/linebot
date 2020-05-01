@@ -27,7 +27,7 @@ def add_data(user_id):
 	user1 = User(user_id=f"{user_id}")
 	session.add(user1)
 
-def update_data(num, birthday):
+def update_data(user_id, num, birthday):
 	user_data = session.query(User).filter(User.user_id==f"{user_id}").one()
 	
 	if num == 0:
