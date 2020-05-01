@@ -12,8 +12,6 @@ import os
 
 import database
 
-#import database
-
 app = Flask(__name__)
 app.debug = False
 
@@ -73,11 +71,11 @@ def handle_image(event):
     im = Image.open(src_image_path)
     im.save(src_image_path)
     
-    user_data = database.serch_data(user_id)
-    
     #user_idを検索して内容をリストへ挿入
-    if user_data is not None:
-        user_data.append(data_list)
+    try:
+        database.serch_data(user_id).append(data_list)
+    except NoResultFound:
+        pass
     
     #登録がない場合名前を確認する
     if len(data_list) == 0:
@@ -97,6 +95,7 @@ def handle_image(event):
         
         #nameとdayで辞書を作成
         user_dict = dict(zip(nema_list, day_list))
+        
     #登録数
     num = len(name_list)
     
@@ -170,9 +169,9 @@ def handle_text(event):
         elif not text_name in name_list:
             #登録数が1か2の場合、nameを追加
             if num == 1:
-                user_data.name2 = text_name
+                user_name.name2 = text_name
             elif num == 2:
-                user_data.name3 = text_name
+                user_name.name3 = text_name
             
         #ifの場合撮影日、elifの場合生年月日の選択            
         select_day(event)
@@ -191,11 +190,11 @@ def handle_postback(event):
     
         #登録数が3より少ない場合、dayを追加
         if num == 0:
-            user_data.day1 = birthday
+            database.serch_data(user_id).day1 = birthday
         elif num == 1:
-            user_data.day2 = birthday
+            database.serch_data(user_id).day2 = birthday
         elif num == 2:
-            user_data.day3 = birthday
+            database.serch_data(user_id).day3 = birthday
             
         #撮影日の選択    
         select_day(event)
