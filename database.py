@@ -21,11 +21,21 @@ Base.metadata.create_all(engine)
 session = Session(bind=engine)
 
 def serch_data(user_id):
-	session.query(User).filter(User.user_id==f"{user_id}").one()
+	session.query(User.name1, User.day1, User.name2, User.day2, User.name3, User.day3).filter(User.user_id==f"{user_id}").one()
 	
 def add_data(user_id):
 	user1 = User(user_id=f"{user_id}")
 	session.add(user1)
+
+def update_data(num, birthday):
+	user_data = session.query(User).filter(User.user_id==f"{user_id}").one()
+	
+	if num == 0:
+		user_data.day1 = birthday
+	elif num == 1:
+		user_data.day2 = birthday
+	elif num == 2:
+		user_data.day3 = birthday
     
 def close_db():
 	session.commit()
