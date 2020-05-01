@@ -73,8 +73,7 @@ def handle_image(event):
     
     #user_idを検索して内容をリストへ挿入
     try:
-        res = [i for i in database.serch_data(user_id) if i is not None]
-        res.append(data_list)
+        data_list = [i for i in database.serch_data(user_id) if i is not None]
     except NoResultFound:
         pass
     
@@ -169,7 +168,6 @@ def handle_text(event):
         #名前が登録済みの場合、生年月日を取得
         if text_name in name_list:
             birthday = user_dict[text_name]
-        #名前の登録がない場合、nameを追加
         
         #ifの場合撮影日、elifの場合生年月日の選択            
         select_day(event)
