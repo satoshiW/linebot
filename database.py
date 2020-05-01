@@ -21,9 +21,9 @@ class User(Base):
 Base.metadata.create_all(engine)
 session = Session(bind=engine)
 
-def serch_data(user_id, data_list):
+def serch_data(user_id):
 	try:
-		session.query(User.name1, User.day1, User.name2, User.day2, User.name3, User.day3).filter(User.user_id==f"{user_id}").one().append(data_list)
+		session.query(User.name1, User.day1, User.name2, User.day2, User.name3, User.day3).filter(User.user_id==f"{user_id}").one()
 	except NoResultFound:
 		pass
 	
