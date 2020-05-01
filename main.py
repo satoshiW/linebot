@@ -5,7 +5,6 @@ from linebot.models import (FollowEvent, PostbackEvent, TemplateSendMessage, Mes
                                             ButtonsTemplate, DatetimePickerTemplateAction, ImageMessage, \
                                             ImageSendMessage, MessageEvent, TextMessage, TextSendMessage)
 from pathlib import Path
-from sqlalchemy.orm.exc import NoResultFound
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import datetime
 import os
@@ -51,7 +50,7 @@ def handle_follow(event):
 #画像の受け取り
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image(event):
-    global message_id, user_id, num, src_image_path, user_data
+    global message_id, user_id, num, src_image_path
     
     data_list = []
     name_list = []
@@ -72,10 +71,7 @@ def handle_image(event):
     im.save(src_image_path)
     
     #user_idを検索して内容をリストへ挿入
-    try:
-        data_list = [i for i in database.serch_data(user_id) if i is not None]
-    except NoResultFound:
-        pass
+    database.serch_data(user_id, data_list)
     
     #登録がない場合名前を確認する
     if len(data_list) == 0:
