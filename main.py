@@ -153,7 +153,7 @@ def handle_text(event):
     if num == 0:
         text_name = event.message.text
         
-        update_name(user_id, num, text_name)
+        database.update_name(user_id, num, text_name)
         
         #生年月日の選択
         select_day(event)
