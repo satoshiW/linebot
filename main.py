@@ -71,7 +71,7 @@ def handle_image(event):
     im.save(src_image_path)
     
     #user_idを検索して内容をリストへ挿入
-    database.serch_data(user_id, data_list)
+    data_list = database.serch_data(user_id, data_list)
     print(data_list)
     
     #登録がない場合名前を確認する
