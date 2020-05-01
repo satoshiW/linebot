@@ -26,7 +26,7 @@ def serch_data(user_id, data_list):
 	
 	try:
 		data_list = [i for i in res if i is not None]
-		print(data_list)
+		return data_list
 	except NoResultFound:
 		pass
 	
