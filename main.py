@@ -86,7 +86,7 @@ def handle_image(event):
             TextSendMessage(text="写真に写っている人の名前は？"))
         #user_idを追加
         database.add_data(user_id)
-        close_db()
+        database.close_db()
     #登録がある場合内容を確認
     elif len(data_list) >= 1:
         #None以外をリストへ挿入
