@@ -73,10 +73,13 @@ def handle_image(event):
     im.save(src_image_path)
     
     #user_idを検索して内容をリストへ挿入
-    database.serch_data(user_id).append(data_list)
+    try:
+        database.serch_data(user_id).append(data_list)
+    except NoResultFound:
+        pass
     
     #登録がない場合名前を確認する
-    if len(data_list) == 1:
+    if len(data_list) == 0:
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text="写真に写っている人の名前は？"))
