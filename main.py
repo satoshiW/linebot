@@ -93,55 +93,55 @@ def handle_image(event):
         
         #nameとdayで辞書を作成
         user_dict = dict(zip(nema_list, day_list))
-        #登録数
-        num = len(name_list)
+    #登録数
+    num = len(name_list)
     
-        #1人登録の場合
-        if num == 1:
-            name_1 = name_list[0]
-            buttons_template = TemplateSendMessage(
-                alt_text="誰が写ってる？",
-                template=ButtonsTemplate(
-                    text="誰が写ってる？", actions=[
-                        MessageAction(label=name_1, text=name_1),
-                        MessageAction(label="その他", text="その他")
-                    ]
-                )
+    #1人登録の場合
+    if num == 1:
+        name_1 = name_list[0]
+        buttons_template = TemplateSendMessage(
+            alt_text="誰が写ってる？",
+            template=ButtonsTemplate(
+                text="誰が写ってる？", actions=[
+                    MessageAction(label=name_1, text=name_1),
+                    MessageAction(label="その他", text="その他")
+                ]
             )
+        )
         
-        #2人登録の場合
-        elif num == 2:
-            name_1 = name_list[0]
-            name_2 = name_list[1]
-            buttons_template = TemplateSendMessage(
-                alt_text="誰が写ってる？",
-                template=ButtonsTemplate(
-                    text="誰が写ってる？", actions=[
-                        MessageAction(label=name_1, text=name_1),
-                        MessageAction(label=name_2, text=name_2),
-                        MessageAction(label="その他", text="その他")
-                    ]
-                )
+    #2人登録の場合
+    elif num == 2:
+        name_1 = name_list[0]
+        name_2 = name_list[1]
+        buttons_template = TemplateSendMessage(
+            alt_text="誰が写ってる？",
+            template=ButtonsTemplate(
+                text="誰が写ってる？", actions=[
+                    MessageAction(label=name_1, text=name_1),
+                    MessageAction(label=name_2, text=name_2),
+                    MessageAction(label="その他", text="その他")
+                ]
             )
+        )
         
-        #３人登録の場合
-        elif num == 3:
-            name_1 = name_list[0]
-            name_2 = name_list[1]
-            name_3 = name_list[2]
-            buttons_template = TemplateSendMessage(
-                alt_text="誰が写ってる？",
-                template=ButtonsTemplate(
-                    text="誰が写ってる？", actions=[
-                        MessageAction(label=name_1, text=name_1),
-                        MessageAction(label=name_2, text=name_2),
-                        MessageAction(label=name_3, text=name_3),
-                        MessageAction(label="その他", text="その他")
-                    ]
-                )
+    #３人登録の場合
+    elif num == 3:
+        name_1 = name_list[0]
+        name_2 = name_list[1]
+        name_3 = name_list[2]
+        buttons_template = TemplateSendMessage(
+            alt_text="誰が写ってる？",
+            template=ButtonsTemplate(
+                text="誰が写ってる？", actions=[
+                    MessageAction(label=name_1, text=name_1),
+                    MessageAction(label=name_2, text=name_2),
+                    MessageAction(label=name_3, text=name_3),
+                    MessageAction(label="その他", text="その他")
+                ]
             )
+        )
         
-        line_bot_api.reply_message(event.reply_token, buttons_template)
+    line_bot_api.reply_message(event.reply_token, buttons_template)
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_text(event):
