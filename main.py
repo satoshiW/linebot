@@ -72,6 +72,7 @@ def handle_image(event):
     
     #user_idを検索して内容をリストへ挿入
     database.serch_data(user_id, data_list)
+    print(data_list)
     
     #登録がない場合名前を確認する
     if len(data_list) == 0:
