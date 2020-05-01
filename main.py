@@ -73,7 +73,10 @@ def handle_image(event):
     im.save(src_image_path)
     
     #user_idを検索して内容をリストへ挿入
-    database.serch_data(user_id).append(data_list)
+    try:
+        database.serch_data(user_id).append(data_list)
+    except AttributeError:
+        pass
     
     #登録がない場合名前を確認する
     if len(data_list) == 0:
