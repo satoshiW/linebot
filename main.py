@@ -168,10 +168,7 @@ def handle_text(event):
         #名前の登録がない場合、nameを追加
         elif not text_name in name_list:
             #登録数が1か2の場合、nameを追加
-            if num == 1:
-                user_name.name2 = text_name
-            elif num == 2:
-                user_name.name3 = text_name
+            database.update_name(user_id, num, text_name)
             
         #ifの場合撮影日、elifの場合生年月日の選択            
         select_day(event)
@@ -189,7 +186,7 @@ def handle_postback(event):
         birthday = event.postback.params["date"]
     
         #登録数が3より少ない場合、dayを追加
-        database.update_data(user_id, num, birthday)
+        database.update_day(user_id, num, birthday)
             
         #撮影日の選択    
         select_day(event)

@@ -27,9 +27,17 @@ def add_data(user_id):
 	user1 = User(user_id=f"{user_id}")
 	session.add(user1)
 
-def update_data(user_id, num, birthday):
+def update_name(user_id, num, text_name):
+	global user_data
+	
 	user_data = session.query(User).filter(User.user_id==f"{user_id}").one()
 	
+	if num == 1:
+		user_data.name2 = text_name
+	elif num == 2:
+		user_data.name3 = text_name
+
+def update_day(user_id, num, birthday):
 	if num == 0:
 		user_data.day1 = birthday
 	elif num == 1:
