@@ -73,7 +73,7 @@ def handle_image(event):
     
     #user_idを検索して内容をリストへ挿入
     try:
-        database.serch_data(user_id).append(data_list)
+        [i for i in database.serch_data(user_id) if i is not None].append(data_list)
     except NoResultFound:
         pass
     
