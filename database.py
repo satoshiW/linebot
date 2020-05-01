@@ -30,7 +30,9 @@ def add_data(user_id):
 def update_name(user_id, num, text_name):
 	user_data = session.query(User).filter(User.user_id==f"{user_id}").one()
 	
-	if num == 1:
+	if num == 0:
+		user_data.name1 = text_name
+	elif num == 1:
 		user_data.name2 = text_name
 	elif num == 2:
 		user_data.name3 = text_name
