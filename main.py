@@ -46,7 +46,7 @@ def handle_follow(event):
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=
-        "友達登録ありがとう。画像を送ってくれたら写っている人が何歳ごろかを画像に書き込むよ。"))
+        "友達登録ありがとう。写っている人が何歳ごろかを画像に書き込むよ。画像を送ってみて。"))
 
 #画像の受け取り
 @handler.add(MessageEvent, message=ImageMessage)
@@ -152,6 +152,9 @@ def handle_text(event):
 
     if num == 0:
         text_name = event.message.text
+        
+        update_name(user_id, num, text_name)
+        
         #生年月日の選択
         select_day(event)
     elif event.message.text == "その他":
