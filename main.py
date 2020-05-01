@@ -73,11 +73,11 @@ def handle_image(event):
     im = Image.open(src_image_path)
     im.save(src_image_path)
     
+    user_data = database.serch_data(user_id)
+    
     #user_idを検索して内容をリストへ挿入
-    try:
-        database.serch_data(user_id).append(data_list)
-    except NoResultFound:
-        pass
+    if user_data is not None:
+        user_data.append(data_list)
     
     #登録がない場合名前を確認する
     if len(data_list) == 0:
@@ -86,7 +86,6 @@ def handle_image(event):
             TextSendMessage(text="写真に写っている人の名前は？"))
         #user_idを追加
         database.add_data(user_id)
-        database.close_db()
     #登録がある場合内容を確認
     elif len(data_list) >= 1:
         #None以外をリストへ挿入
@@ -171,9 +170,9 @@ def handle_text(event):
         elif not text_name in name_list:
             #登録数が1か2の場合、nameを追加
             if num == 1:
-                user_name.name2 = text_name
+                user_data.name2 = text_name
             elif num == 2:
-                user_name.name3 = text_name
+                user_data.name3 = text_name
             
         #ifの場合撮影日、elifの場合生年月日の選択            
         select_day(event)
@@ -192,11 +191,11 @@ def handle_postback(event):
     
         #登録数が3より少ない場合、dayを追加
         if num == 0:
-            database.serch_data(user_id).day1 = birthday
+            user_data.day1 = birthday
         elif num == 1:
-            database.serch_data(user_id).day2 = birthday
+            user_data.day2 = birthday
         elif num == 2:
-            database.serch_data(user_id).day3 = birthday
+            user_data.day3 = birthday
             
         #撮影日の選択    
         select_day(event)
