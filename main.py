@@ -5,6 +5,7 @@ from linebot.models import (FollowEvent, PostbackEvent, TemplateSendMessage, Mes
                                             ButtonsTemplate, DatetimePickerTemplateAction, ImageMessage, \
                                             ImageSendMessage, MessageEvent, TextMessage, TextSendMessage)
 from pathlib import Path
+from sqlalchemy.orm.exc import NoResultFound
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import datetime
 import os
@@ -75,7 +76,7 @@ def handle_image(event):
     #user_idを検索して内容をリストへ挿入
     try:
         database.serch_data(user_id).append(data_list)
-    except AttributeError:
+    except NoResultFound:
         pass
     
     #登録がない場合名前を確認する
