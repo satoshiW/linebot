@@ -81,13 +81,10 @@ def handle_image(event):
         #user_idを追加
         database.add_data(user_id)
     #登録がある場合内容を確認
-    elif len(data_list) >= 1:
+    elif len(data_list) > 0:
         #None以外をリストへ挿入
-        names = [n for n in data_list if n is not None and type(n) is str]
+        names = [n for n in data_list if type(n) is str]
         days = [d for d in data_list if type(d) is int]
-        
-        name_list.append(names)
-        day_list.append(days)
         
         #nameとdayで辞書を作成
         user_dict = dict(zip(nema_list, day_list))
