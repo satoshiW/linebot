@@ -87,7 +87,7 @@ def handle_image(event):
         days = [d for d in data_list if type(d) is int]
         
         #nameとdayで辞書を作成
-        user_dict = dict(zip(nema_list, day_list))
+        user_dict = dict(zip(name_list, day_list))
         
     #登録数
     num = len(name_list)
