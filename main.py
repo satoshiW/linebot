@@ -50,7 +50,7 @@ def handle_follow(event):
 #画像の受け取り
 @handler.add(MessageEvent, message=ImageMessage)
 def handle_image(event):
-    global message_id, user_id, num, src_image_path
+    global message_id, user_id, name_list, user_dict, num, src_image_path
     
     data_list = []
     name_list = []
