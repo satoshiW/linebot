@@ -83,8 +83,8 @@ def handle_image(event):
     #登録がある場合内容を確認
     elif len(data_list) > 0:
         #None以外をリストへ挿入
-        names = [n for n in data_list if type(n) is str]
-        days = [d for d in data_list if type(d) is int]
+        name_list = [n for n in data_list if type(n) is str]
+        day_list = [d for d in data_list if type(d) is int]
         
         #nameとdayで辞書を作成
         user_dict = dict(zip(name_list, day_list))
