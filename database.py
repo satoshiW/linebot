@@ -6,11 +6,13 @@ from sqlalchemy.orm.exc import NoResultFound
 import datetime
 import os
 
+#環境変数からデータベースのURLを取得
 DATABASE_URL = os.environ["DATABASE_URL"]
 
 engine = create_engine(DATABASE_URL)
 Base = declarative_base()
 
+#テーブル定義
 class User(Base):
 	__tablename__ = "user_list"
 	user_id = Column("user_id", String(50), primary_key=True)
@@ -26,21 +28,25 @@ session = Session(bind=engine)
 
 def serch_data(user_id):
 	try:
+		#user_idで検索
 		res = session.query(User.name1, User.day1, User.name2, User.day2, User.name3, User.day3).filter(User.user_id==f"{user_id}").one()
 		
+		#nameとdayをそれぞれリストへ挿入
 		name_list = [n for n in res if type(n) is str]
 		day_list = [str(d) for d in res if type(d) is datetime.date]
 		return name_list, day_list
+	#user_idの登録が無い場合パスする
 	except NoResultFound:
 		pass
 	
 def add_data(user_id):
-	user1 = User(user_id=f"{user_id}")
-	session.add(user1)
+	#user_idを登録
+	session.add(User(user_id=f"{user_id}"))
 
 def update_data(user_id, num, text_name, birthday):
 	user_data = session.query(User).filter(User.user_id==f"{user_id}").one()
 	
+	#登録数に応じてnameとdayを保存
 	if num == 0:
 		user_data.name1 = text_name
 		user_data.day1 = birthday
@@ -51,6 +57,7 @@ def update_data(user_id, num, text_name, birthday):
 		user_data.name3 = text_name
 		user_data.day3 = birthday
     
+#データベースの変更路保存し、接続を切る
 def close_db():
 	session.commit()
 	session.close()
