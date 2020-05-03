@@ -218,7 +218,7 @@ def select_day(event):
         alt_text=message,
         template=ButtonsTemplate(
             text=message,
-            thumbnail_image_url=".static/images/Screen Shot 2019-05-06 at 23.18.57.png",
+            thumbnail_image_url="https://drive.google.com/drive/my-drive/chica_l.jpg",
             actions=[
                 DatetimePickerTemplateAction(
                     label="選択",
