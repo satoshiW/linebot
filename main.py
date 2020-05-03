@@ -191,6 +191,8 @@ def handle_postback(event):
         #画像の送信
         line_bot_api.reply_message(event.reply_token, image_message)
         
+        del birthday
+        
         database.close_db()
 
 #画像保存関数
