@@ -21,12 +21,14 @@ class User(Base):
 Base.metadata.create_all(engine)
 session = Session(bind=engine)
 
-def serch_data(user_id, data_list):
+def serch_data(user_id):
 	res = session.query(User.name1, User.day1, User.name2, User.day2, User.name3, User.day3).filter(User.user_id==f"{user_id}").one()
 	
 	try:
-		data_list = [i for i in res if i is not None]
-		return data_list
+		name_list = [n for n in res if type(n) is str]
+		day_list = [str(d) for d in res if type(d) is datetime.date]
+		#data_list = [str(i) for i in res if i is not None]
+		return name_list, day_list
 	except NoResultFound:
 		pass
 	

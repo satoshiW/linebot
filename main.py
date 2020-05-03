@@ -52,7 +52,7 @@ def handle_follow(event):
 def handle_image(event):
     global message_id, user_id, name_list, user_dict, num, src_image_path
     
-    data_list = []
+    #data_list = []
     name_list = []
     day_list = []
     user_dict = {}
@@ -72,26 +72,28 @@ def handle_image(event):
     im.save(src_image_path)
     
     #user_idを検索して内容をリストへ挿入
-    data_list = database.serch_data(user_id, data_list)
+    #data_list = database.serch_data(user_id, data_list)
+    #None以外をリストへ挿入
+    name_list, day_list = database.serch_data(user_id)
+    
+    #登録数
+    num = len(name_list)
     
     #登録がない場合名前を確認する
-    if len(data_list) == 0:
+    if num == 0:
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text="写真に写っている人の名前は？"))
         #user_idを追加
         database.add_data(user_id)
     #登録がある場合内容を確認
-    elif len(data_list) > 0:
-        #None以外をリストへ挿入
-        name_list = [n for n in data_list if type(n) is str]
-        day_list = [str(d) for d in data_list if type(d) is int]
+    elif num =! 0:
+        
         
         #nameとdayで辞書を作成
         user_dict = dict(zip(name_list, day_list))
         
-    #登録数
-    num = len(name_list)
+    
     
     #1人登録の場合
     if num == 1:
