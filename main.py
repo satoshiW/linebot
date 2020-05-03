@@ -218,7 +218,7 @@ def select_day(event):
         alt_text=message,
         template=ButtonsTemplate(
             text=message,
-            thumbnail_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}/700",
+            thumbnail_image_url=".static/images/Screen Shot 2019-05-06 at 23.18.57.png",
             actions=[
                 DatetimePickerTemplateAction(
                     label="選択",
