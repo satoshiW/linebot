@@ -70,25 +70,6 @@ def handle_image(event):
     im = Image.open(src_image_path)
     im.save(src_image_path)
     
-    date_picker = TemplateSendMessage(
-        alt_text="A",
-        template=ButtonsTemplate(
-            text="A",
-            thumbnail_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}",
-            actions=[
-                DatetimePickerTemplateAction(
-                    label="選択",
-                    data="action=buy&itemid=1",
-                    mode="date",
-                    initial=str(datetime.date.today()),
-                    max=str(datetime.date.today())
-                )
-            ]
-        )
-    )
-    
-    line_bot_api.reply_message(event.reply_token, date_picker)
-    
     try:
         name_list, day_list = database.serch_data(user_id)
     except TypeError:
@@ -237,7 +218,7 @@ def select_day(event):
         alt_text=message,
         template=ButtonsTemplate(
             text=message,
-            thumbnail_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}",
+            thumbnail_image_url=f"https://hidden-anchorage-52228.herokuapp.com/{src_image_path}/700",
             actions=[
                 DatetimePickerTemplateAction(
                     label="選択",
