@@ -87,7 +87,7 @@ def handle_image(event):
         #user_idを追加
         database.add_data(user_id)
     #登録がある場合内容を確認
-    elif num =! 0:
+    elif num != 0:
         
         
         #nameとdayで辞書を作成
