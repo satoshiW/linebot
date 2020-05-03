@@ -3,11 +3,12 @@ from sqlalchemy import create_engine, Column, String, Date
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import NoResultFound
-
 import datetime
+import os
 
-engine = create_engine("postgres://qaxaikcjpxaqpy:9eaf8a7a006a3c7924f6fb625c53f94d7c4f3e50d\
-466e3a1f57ac26bbe097ccd@ec2-52-201-55-4.compute-1.amazonaws.com:5432/d55nc1eudvai0c")
+DATABASE_URL = os.environ["DATABASE_URL"]
+
+engine = create_engine(DATABASE_URL)
 Base = declarative_base()
 
 class User(Base):
