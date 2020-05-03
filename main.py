@@ -52,7 +52,6 @@ def handle_follow(event):
 def handle_image(event):
     global message_id, user_id, name_list, user_dict, num, src_image_path
     
-    #data_list = []
     name_list = []
     day_list = []
     user_dict = {}
@@ -71,9 +70,6 @@ def handle_image(event):
     im = Image.open(src_image_path)
     im.save(src_image_path)
     
-    #user_idを検索して内容をリストへ挿入
-    #data_list = database.serch_data(user_id, data_list)
-    #None以外をリストへ挿入
     name_list, day_list = database.serch_data(user_id)
     
     #登録数
@@ -88,13 +84,9 @@ def handle_image(event):
         database.add_data(user_id)
     #登録がある場合内容を確認
     elif num != 0:
-        
-        
         #nameとdayで辞書を作成
         user_dict = dict(zip(name_list, day_list))
         
-    
-    
     #1人登録の場合
     if num == 1:
         name_1 = name_list[0]
@@ -148,9 +140,6 @@ def handle_text(event):
 
     if num == 0:
         text_name = event.message.text
-        
-        database.update_name(user_id, num, text_name)
-        
         #生年月日の選択
         select_day(event)
     elif event.message.text == "その他":

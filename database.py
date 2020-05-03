@@ -29,7 +29,6 @@ def serch_data(user_id):
 	try:
 		name_list = [n for n in res if type(n) is str]
 		day_list = [str(d) for d in res if type(d) is datetime.date]
-		#data_list = [str(i) for i in res if i is not None]
 		return name_list, day_list
 	except NoResultFound:
 		pass
