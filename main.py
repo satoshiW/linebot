@@ -70,8 +70,11 @@ def handle_image(event):
     im = Image.open(src_image_path)
     im.save(src_image_path)
     
-    name_list, day_list = database.serch_data(user_id)
-    
+    try:
+        name_list, day_list = database.serch_data(user_id)
+    except TypeError:
+        pass
+        
     #登録数
     num = len(name_list)
     
