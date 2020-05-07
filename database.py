@@ -26,6 +26,7 @@ class User(Base):
 Base.metadata.create_all(engine)
 session = Session(bind=engine)
 
+#user_idの検索
 def serch_data(user_id):
 	try:
 		#user_idで検索
@@ -38,11 +39,12 @@ def serch_data(user_id):
 	#user_idの登録が無い場合パスする
 	except NoResultFound:
 		pass
-	
+
+#user_idの登録
 def add_data(user_id):
-	#user_idを登録
 	session.add(User(user_id=f"{user_id}"))
 
+#ユーザー情報の更新
 def update_data(user_id, num, text_name, birthday):
 	user_data = session.query(User).filter(User.user_id==f"{user_id}").one()
 	
@@ -57,7 +59,7 @@ def update_data(user_id, num, text_name, birthday):
 		user_data.name3 = text_name
 		user_data.day3 = birthday
     
-#データベースの変更路保存し、接続を切る
+#データベースの変更を保存し、接続を切る
 def close_db():
 	session.commit()
 	session.close()
