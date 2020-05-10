@@ -250,8 +250,8 @@ def date_the_image(src: str, desc: str, event) -> None:
     how_old = datetime.datetime.strptime(date, "%Y-%m-%d") - datetime.datetime.strptime(str(birthday), "%Y-%m-%d")
     #生後日数と365(日)で商と余りを計算
     years, days = divmod(how_old.days, 365)
-    #余りと12(月)で商を計算
-    month = days // 12
+    #余りと30(日)で商を計算
+    month = days // 30
     text = text_name + f"({years}才{month}ヶ月)"
     
     #テキストのサイズ
