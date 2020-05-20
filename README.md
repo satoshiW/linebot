@@ -2,7 +2,6 @@
 画像を送信すると名前や生年月日をデータベースに保存し、撮影日から何歳ごろの写真かを計算して画像に書き込むラインボットです。
 
 # デモ
-https://drive.google.com/open?id=19FnSmeELYyF17s2eEZT40ar3EvukQwoX
 
 
 # ライブラリ
