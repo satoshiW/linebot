@@ -1,5 +1,5 @@
 Flask==1.1.1
 line-bot-sdk==1.14.0
-pillow==5.3.0
+pillow==8.2.0
 flask-sqlalchemy==2.4.1
 psycopg2==2.8.5
